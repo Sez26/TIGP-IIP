@@ -7,4 +7,5 @@ Tasks to do:
 1) Create conda environment
 2) Connect to git repo
 3) Make conda env file and script to load it
+% couldn't run the ase tests for some reason so moved onto basic tutorial
 4) Do tutorial ASE project
