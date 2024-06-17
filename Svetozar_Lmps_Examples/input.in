@@ -1,0 +1,159 @@
+#  MAPbI3 MD input script for LAMMPS
+
+echo    both
+log     initialize.md.out
+
+#-------------------------------------------------------------------------------
+# Stage 3.1: Initialize LAMMPS run for 3-d periodic
+#-------------------------------------------------------------------------------
+
+units			real
+boundary		p p p
+atom_style		full
+
+read_data		structure.input.dat
+
+pair_style      hybrid buck/coul/long 15 lj/cut/coul/long 15
+pair_coeff      1 1 lj/cut/coul/long 0.1094 3.39970
+pair_coeff      1 2 lj/cut/coul/long 0.0414 2.23440
+pair_coeff      1 3 lj/cut/coul/long 0.0414 2.67980
+pair_coeff      1 4 buck/coul/long 112936.714213 0.342426 0.00
+pair_coeff      1 5 lj/cut/coul/long 0.1364 3.32480
+pair_coeff      1 6 buck/coul/long 32690390.937995 0.150947 0.00
+pair_coeff      2 2 lj/cut/coul/long 0.0157 1.06910
+pair_coeff      2 3 lj/cut/coul/long 0.0157 1.51450
+pair_coeff      2 4 lj/cut/coul/long 0.0574 2.75000
+pair_coeff      2 5 lj/cut/coul/long 0.0517 2.15950
+pair_coeff      2 6 lj/cut/coul/long 0.0140 2.26454
+pair_coeff      3 3 lj/cut/coul/long 0.0157 1.96000
+pair_coeff      3 4 lj/cut/coul/long 0.0574 3.10000
+pair_coeff      3 5 lj/cut/coul/long 0.0517 2.60500
+pair_coeff      3 6 lj/cut/coul/long 0.0140 2.70999
+pair_coeff      4 4 buck/coul/long 22793.338582 0.482217 696.949542
+pair_coeff      4 5 buck/coul/long 112936.714213 0.342426 0.00
+pair_coeff      4 6 buck/coul/long 103496.133010 0.321737 0.00
+pair_coeff      5 5 lj/cut/coul/long 0.1700 3.25000
+pair_coeff      5 6 buck/coul/long 32690390.937995 0.150947 0.00
+pair_coeff      6 6 buck/coul/long 70359906.629702 0.131258 0.00
+
+
+kspace_style	pppm 0.00001
+pair_modify	tail yes
+
+
+bond_style	harmonic
+bond_coeff      1   293.6 1.499 # C-N bond
+bond_coeff      2   338.7 1.091 # C-H bond type 1-3
+bond_coeff      3   369.0 1.033 # N-H bond type 
+
+angle_style	harmonic
+angle_coeff     1 49.00 107.9100  # N-C-H angle 
+angle_coeff     2 39.00 110.7400  # H-C-H angle 
+angle_coeff     3 46.2  110.1100  # H-N-C angle 
+angle_coeff     4 40.5  108.1100  # H-N-H angle
+
+
+dihedral_style	charmm
+dihedral_coeff	1 0.1556 0 3 0.0 # special bonds??  0.833 0.500
+
+
+special_bonds	lj 0.0 0.0 0.5 coul 0.0 0.0 0.833
+
+
+#------------------------------------------------------------------------
+# reset atomic properties .... e.g. partial charges
+#------------------------------------------------------------------------
+set             type 6 charge 2.03  # Pb
+set             type 4 charge -1.13 # I
+set             type 5 charge -1.1  # N
+set             type 1 charge 0.771 # C
+set             type 2 charge 0.54  # Hn
+set             type 3 charge 0.023 # Hc
+
+
+neighbor		2.0 bin
+neigh_modify		delay 0 every 1 check yes
+
+variable		R		equal 0.00198722
+variable		sysvol		equal vol
+variable		sysmass		equal mass(all)/6.0221367e+23
+variable		sysdensity	equal v_sysmass/v_sysvol/1.0e-24
+variable		coulomb		equal ecoul+elong
+variable		etotal		equal etotal
+variable		pe		equal pe
+variable		ke		equal ke
+variable		evdwl		equal evdwl
+variable		epair		equal epair
+variable		ebond		equal ebond
+variable		eangle		equal eangle
+variable		edihed		equal edihed
+variable		eimp		equal eimp
+variable		lx		equal lx
+variable		ly		equal ly
+variable		lz		equal lz
+variable		Nthermo		equal 0
+variable		cella		equal lx
+variable		cellb		equal sqrt(ly*ly+xy*xy)
+variable		cellc		equal sqrt(lz*lz+xz*xz+yz*yz)
+variable		cellalpha	equal acos((xy*xz+ly*yz)/(v_cellb*v_cellc))
+variable		cellbeta	equal acos(xz/v_cellc)
+variable		cellgamma	equal acos(xy/v_cellb)
+variable		p		equal press
+variable		pxx		equal pxx
+variable		pyy		equal pyy
+variable		pzz		equal pzz
+variable		pyz		equal pyz
+variable		pxz		equal pxz
+variable		pxy		equal pxy
+variable		sxx		equal -pxx
+variable		syy		equal -pyy
+variable		szz		equal -pzz
+variable		syz		equal -pyz
+variable		sxz		equal -pxz
+variable		sxy		equal -pxy
+variable		fmax		equal fmax
+variable	        fnorm		equal fnorm
+variable		time equal step*dt+0.000001
+
+thermo_style		custom step v_time press vol v_sysdensity temp ebond eangle edihed eimp evdwl ecoul etail elong pe ke
+thermo_modify		flush yes
+
+
+#
+# Set up the fixed and movable groups
+#
+
+group	movable union all
+group	fixed subtract all movable
+log		minimization.md.out
+#-------------------------------------------------------------------------------
+# Stage 3.2: Minimization
+#-------------------------------------------------------------------------------
+
+#min_style		cg
+#min_modify		dmax 0.4 line fast
+reset_timestep		0
+#thermo_style		custom step fmax fnorm press vol v_sysdensity v_sxx v_syy v_szz v_syz v_sxz v_sxy pe v_cella v_cellb v_cellc v_cellalpha v_cellbeta v_cellgamma
+thermo_style		custom step press vol temp pe
+dump			sci all custom 1000 min.md.lammpstrj id mol type q xs ys zs
+thermo			100
+fix			3_2_2 fixed setforce 0.0 0.0 0.0
+minimize		0.0 1.0 1000 10000
+
+#undump			sci
+unfix		3_2_2
+
+write_data      structure.output.dat
+
+
+velocity all create 300.0 12345
+
+timestep       1.0
+
+fix          1 all nvt temp 300.0 300.0 100.0 #iso 1.0 1.0 1000.0
+
+dump         md all custom 10 md.lammpstrj id mol type q xs ys zs
+#group void id 1084
+#displace_atoms void move 18.075 0 0
+
+run          100000
