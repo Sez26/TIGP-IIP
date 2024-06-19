@@ -11,6 +11,8 @@ PoscarFile = '/home/sez26/TIGP-IIP/HEA/smallPos'
 b2NiTi = vasp.read_vasp(PoscarFile) # vasp.read_vasp function reads POSCAR files as Atoms type
 
 # print(type(b2NiTi)); # generator
+# view(b2NiTi) # Success
 
 # trying atoms functions
-view(b2NiTi) # Success
+b2NiTi_atnum = b2NiTi.get_atomic_numbers()
+print(b2NiTi_atnum) # Success
