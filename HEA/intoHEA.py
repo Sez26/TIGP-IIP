@@ -5,6 +5,7 @@ from ase import Atoms # importing atoms package
 from ase.io import vasp # for reading and writing files
 from ase.visualize import view
 import numpy as np
+import random
 
 # importing poscar
 # specifying path to file
@@ -47,20 +48,34 @@ b2NiTi_Aidx = np.where(b2NiTi_A == True)[0] # finding the indicies, [0] to chang
 b2NiTi_Bidx = np.where(b2NiTi_B == True)[0]
 
 # print(b2NiTi_Aidx)
-# print(type(b2NiTi_Aidx))
+# print(type(b2NiTi_Aidx[0]))
 
 # 2) Assigning tags
 # sublattice A atoms are tagged with 1, sublattice B tagged 0
-subLatTags = b2NiTi_A * 1
+subLatTags = b2NiTi_A * 1 # pretty sure this line is unneccessary
 # print(subLatTags.shape)
 # print(b2NiTi.get_tags().shape)
 b2NiTi.set_tags(subLatTags)
 
 # 3) Writing element assignment def functions
-def ChangeElement(atoms, desAtNum, desAtMass, desChemSym):
-    atoms.set_atomic_numbers(desAtNum)
-    atoms.set_masses(desAtMass)
-    atoms.set_chemical_symbols(desChemSym)
+def ChangeElement(atoms, idx, desChemSym): # desAtNum, desAtMass, desChemSym):
+    # ONLY NEED TO CHANGE ONE OF THESE VALUES AND THE OTHERS ALL CHANGE
+
+    # creation of input arrays
+    # i = np.zeros(len(atoms.get_tags()))
+    # i[idx] = True
+
+    # atoms.set_atomic_numbers(desAtNum*i)
+    # atoms.set_masses(desAtMass*i)
+
+    # loop to assign new values to chemical symbol (cos string data type be tricky)
+    desChemSymList = atoms.get_chemical_symbols() # originally setting as old chemical symbols
+    # print(desChemSymList)
+    # Assign the new value to selected elements in the list
+    for i_sym in idx:
+        desChemSymList[i_sym] = desChemSym
+    # print(desChemSymList)
+    atoms.set_chemical_symbols(desChemSymList)
     return atoms
 
 # setting up HEA 5 element parameters (this could probably be called from a library somewhere)
@@ -73,5 +88,29 @@ HEA_ChemSym = ['Co', 'Ni', 'Hf', 'Ti', 'Zr']
 # in unedited state the B2 structure already has a Ni sublattice A and a Ti sublattice B
 # therefore additional elements only need be added.
 
-# find row indexes of sublattices
+# finding total number of atoms in each lattice
+numA = len(b2NiTi_Aidx)
+numB = len(b2NiTi_Bidx)
 
+# for sublattice A, Co and Ni are in equal proportion
+numSel = int(numA/2)
+SelAidx = np.random.choice(b2NiTi_Aidx, size = numSel, replace=False)
+
+# Call replacement function
+SubLatA_HEA = ChangeElement(b2NiTi, SelAidx, HEA_ChemSym[0]) # HEA_AtNum[0], HEA_AtMass[0], HEA_ChemSym[0])
+# view(SubLatA_HEA)
+
+# Similar for sublattice B
+# for sublattice B, Hf, Ti, and Zr are in equal proportion
+numSel = int(numB/3)
+SelBidx = np.random.choice(b2NiTi_Bidx, size = (2,numSel), replace=False)
+# print(SelBidx.shape)
+# print(SelBidx[0,:])
+
+# Call replacement function
+SubLatBHf_HEA = ChangeElement(SubLatA_HEA, SelBidx[0,:], HEA_ChemSym[2])
+SubLatBZr_HEA = ChangeElement(SubLatBHf_HEA, SelBidx[1,:], HEA_ChemSym[4])
+
+HEA_ordered = SubLatBZr_HEA
+
+view(HEA_ordered)
