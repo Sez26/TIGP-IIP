@@ -78,11 +78,6 @@ SelAidx = np.random.choice(b2NiTi_Aidx, size = numSel, replace=False)
 SubLatA_HEA = ChangeElement(b2NiTi, SelAidx, HEA_ChemSym[0])
 # view(SubLatA_HEA)
 
-CoIdx = np.where(SubLatA_HEA.get_atomic_numbers() == HEA_AtNum[0])[0]
-NiIdx = np.where(SubLatA_HEA.get_atomic_numbers() == HEA_AtNum[1])[0]
-print('PreSubLat2 num Co: ', len(CoIdx))
-print('PreSubLat2 num Ni: ', len(NiIdx))
-
 # Similar for sublattice B
 # for sublattice B, Hf, Ti, and Zr are in equal proportion
 numSel = int(numB/3)
@@ -94,28 +89,14 @@ print(len(SelBidx[0,:]))
 SubLatBHf_HEA = ChangeElement(SubLatA_HEA, SelBidx[0,:], HEA_ChemSym[2])
 SubLatBZr_HEA = ChangeElement(SubLatBHf_HEA, SelBidx[1,:], HEA_ChemSym[4])
 
-CoIdx = np.where(SubLatBZr_HEA.get_atomic_numbers() == HEA_AtNum[0])[0]
-NiIdx = np.where(SubLatBZr_HEA.get_atomic_numbers() == HEA_AtNum[1])[0]
-print('PostSubLat2 num Co: ', len(CoIdx))
-print('PostSubLat2 num Ni: ', len(NiIdx))
-HfIdx = np.where(SubLatBZr_HEA.get_atomic_numbers() == HEA_AtNum[2])[0]
-TiIdx = np.where(SubLatBZr_HEA.get_atomic_numbers() == HEA_AtNum[3])[0]
-ZrIdx = np.where(SubLatBZr_HEA.get_atomic_numbers() == HEA_AtNum[4])[0]
-print('Postnum Hf: ', len(HfIdx))
-print('Postnum Ti: ', len(TiIdx))
-print('Postnum Zr: ', len(ZrIdx))
+HEA_ordered = SubLatBZr_HEA.copy() # copy function for atoms object not equate
 
-# THIS IS RIGHT!!!
-# What changes between here and the end of my code????
+# CoIdx = np.where(HEA_ordered.get_atomic_numbers() == HEA_AtNum[0])[0]
+# NiIdx = np.where(HEA_ordered.get_atomic_numbers() == HEA_AtNum[1])[0]
+# print('Post Copy num Co: ', len(CoIdx))
+# print('Post Copy num Ni: ', len(NiIdx))
 
-HEA_ordered = SubLatBZr_HEA
-
-CoIdx = np.where(HEA_ordered.get_atomic_numbers() == HEA_AtNum[0])[0]
-NiIdx = np.where(HEA_ordered.get_atomic_numbers() == HEA_AtNum[1])[0]
-print('PostSubLat2 num Co: ', len(CoIdx))
-print('PostSubLat2 num Ni: ', len(NiIdx))
-
-# view(HEA_ordered)
+view(HEA_ordered)
 
 ############################################################
 
@@ -128,7 +109,7 @@ numSel = int(len(b2NiTi.get_tags())/6) # this be rounding!
 Selrand1 = np.random.choice(np.arange(0,len(b2NiTi.get_tags())), size = (3,numSel), replace=False)
 # print(Selrand1)
 numSel = int(len(b2NiTi.get_tags())/4)
-Selrand2 = np.random.choice(np.arange(0,len(b2NiTi.get_tags())), size = (2,numSel), replace=False)#
+Selrand2 = np.random.choice(np.arange(0,len(b2NiTi.get_tags())), size = (2,numSel), replace=False)
 # print(Selrand2)
 
 # Call replacement function
@@ -142,19 +123,30 @@ for i in [0,1,2]:
     HEA_Hf_Ti_Zr_new = ChangeElement(HEA_Hf_Ti_Zr, Selrand1[i,:], HEA_ChemSym[i+2])
     HEA_Hf_Ti_Zr = HEA_Hf_Ti_Zr_new
 
-HEA_disordered = HEA_Hf_Ti_Zr
-# view(HEA_disordered)
+HEA_disordered = HEA_Hf_Ti_Zr.copy()
+
+view(HEA_disordered)
 
 # 6) Swap Zr atoms
 
 # find indices of Zr atoms (list comprehension)
-CoIdx = np.where(HEA_ordered.get_atomic_numbers() == HEA_AtNum[0])[0]
-NiIdx = np.where(HEA_ordered.get_atomic_numbers() == HEA_AtNum[1])[0]
-HfIdx = np.where(HEA_ordered.get_atomic_numbers() == HEA_AtNum[2])[0]
-TiIdx = np.where(HEA_ordered.get_atomic_numbers() == HEA_AtNum[3])[0]
 ZrIdx = np.where(HEA_ordered.get_atomic_numbers() == HEA_AtNum[4])[0]
-print('num Co: ', len(CoIdx))
-print('num Ni: ', len(NiIdx))
-print('num Hf: ', len(HfIdx))
-print('num Ti: ', len(TiIdx))
 print('num Zr: ', len(ZrIdx)) # I don't understand how this is bigger than 576
+# fixed!
+
+# Select % of Zr atoms to swap
+percZrSwap = 25
+numSel = int((percZrSwap/100)*len(ZrIdx))
+ZrSwap = np.random.choice(ZrIdx, size = numSel, replace=False)
+
+# Select corresponding % of Co/Ni atoms to swap
+CoNiSwap = np.random.choice(b2NiTi_Aidx, size = numSel, replace=False)
+
+# Swap 'em, total proportions of Co and Ni atoms must remain constant (there half of swapees must be Co the other Ni)
+HEA_III_CoNiSwap = ChangeElement(HEA_ordered, CoNiSwap, HEA_ChemSym[4])
+HEA_III_ZrSwap1 = ChangeElement(HEA_III_CoNiSwap, ZrSwap[0:int(len(ZrSwap)/2)], HEA_ChemSym[0])
+HEA_III_ZrSwap2 = ChangeElement(HEA_III_ZrSwap1, ZrSwap[int(len(ZrSwap)/2):-1], HEA_ChemSym[1])
+
+HEA_partially_ordered = HEA_III_ZrSwap2.copy()
+
+view(HEA_partially_ordered)
