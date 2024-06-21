@@ -10,12 +10,14 @@
 # 5) replicating model I from paper (disordered)
 # 6) write swapping def function to swap a percentage of Zr in sub lattice A
 # 7) replicating model III from paper
+# 8) export models as .lmp files
 
 from ase import Atoms # importing atoms package
-from ase.io import vasp # for reading and writing files
+from ase.io import vasp # for reading and writing vasp POSCAR input files
 from ase.visualize import view
 import numpy as np
 import random
+from ase.io import lammpsdata # for exporting (writing) to .lmp file
 
 # importing poscar
 # specifying path to file
@@ -150,3 +152,9 @@ HEA_III_ZrSwap2 = ChangeElement(HEA_III_ZrSwap1, ZrSwap[int(len(ZrSwap)/2):-1], 
 HEA_partially_ordered = HEA_III_ZrSwap2.copy()
 
 view(HEA_partially_ordered)
+
+# 8) write to .lmp file
+
+lammpsdata.write_lammps_data('./HEA_I.lmp', HEA_disordered)
+lammpsdata.write_lammps_data('./HEA_II.lmp', HEA_ordered)
+lammpsdata.write_lammps_data('./HEA_III.lmp', HEA_partially_ordered)
