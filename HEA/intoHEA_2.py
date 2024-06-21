@@ -70,14 +70,14 @@ HEA_ChemSym = ['Co', 'Ni', 'Hf', 'Ti', 'Zr']
 # therefore additional elements only need be added.
 
 # finding total number of atoms in each lattice
-numA = sum(b2NiTi_A)
-print('total atoms:', len(b2NiTi_atNum))
-print('numA:',numA)
-numB = sum(b2NiTi_B)
-print('numB: ',numB)
+total_atoms = int(len(b2NiTi.get_tags()))
+print(total_atoms)
+print(type(total_atoms))
 # for sublattice A, Co and Ni are in equal proportion
-numSel = int(numA/2)
-print('num Co/Ni selected: ', numSel)
+numSel = total_atoms//4
+print(numSel)
+print(type(numSel))
+# print('num Co/Ni selected: ', numSel)
 SelAidx = np.random.choice(b2NiTi_Aidx, size = numSel, replace=False)
 
 # Call replacement function
@@ -86,10 +86,10 @@ SubLatA_HEA = ChangeElement(b2NiTi, SelAidx, HEA_ChemSym[0])
 
 # Similar for sublattice B
 # for sublattice B, Hf, Ti, and Zr are in equal proportion
-numSel = int(numB/3)
-print('num Hf/Ti/Zr selected: ', numSel)
+numSel = total_atoms//6
+# print('num Hf/Ti/Zr selected: ', numSel)
 SelBidx = np.random.choice(b2NiTi_Bidx, size = (2,numSel), replace=False)
-print(len(SelBidx[0,:]))
+# print(len(SelBidx[0,:]))
 
 # Call replacement function
 SubLatBHf_HEA = ChangeElement(SubLatA_HEA, SelBidx[0,:], HEA_ChemSym[2])
@@ -97,12 +97,7 @@ SubLatBZr_HEA = ChangeElement(SubLatBHf_HEA, SelBidx[1,:], HEA_ChemSym[4])
 
 HEA_ordered = SubLatBZr_HEA.copy() # copy function for atoms object not equate
 
-# CoIdx = np.where(HEA_ordered.get_atomic_numbers() == HEA_AtNum[0])[0]
-# NiIdx = np.where(HEA_ordered.get_atomic_numbers() == HEA_AtNum[1])[0]
-# print('Post Copy num Co: ', len(CoIdx))
-# print('Post Copy num Ni: ', len(NiIdx))
-
-view(HEA_ordered)
+# view(HEA_ordered)
 
 ############################################################
 
@@ -111,12 +106,14 @@ view(HEA_ordered)
 # random selection
 # print(len(b2NiTi.get_tags()))
 # print(b2NiTi.get_tags().shape)
-numSel = int(len(b2NiTi.get_tags())/6) # this be rounding!
+numSel = total_atoms//6
 Selrand1 = np.random.choice(np.arange(0,len(b2NiTi.get_tags())), size = (3,numSel), replace=False)
 # print(Selrand1)
-numSel = int(len(b2NiTi.get_tags())/4)
+numSel = total_atoms//4
 Selrand2 = np.random.choice(np.arange(0,len(b2NiTi.get_tags())), size = (2,numSel), replace=False)
 # print(Selrand2)
+
+# there is an error here because the ones selected in selrand1 can be reselected in selrand2 and reassigned. Therefore the proportions are fucked.
 
 # Call replacement function
 HEA_Co_Ni = b2NiTi
@@ -131,18 +128,18 @@ for i in [0,1,2]:
 
 HEA_disordered = HEA_Hf_Ti_Zr.copy()
 
-view(HEA_disordered)
+# view(HEA_disordered)
 
 # 6) Swap Zr atoms
 
 # find indices of Zr atoms (list comprehension)
 ZrIdx = np.where(HEA_ordered.get_atomic_numbers() == HEA_AtNum[4])[0]
-print('num Zr: ', len(ZrIdx)) # I don't understand how this is bigger than 576
+# print('num Zr: ', len(ZrIdx)) # I don't understand how this is bigger than 576
 # fixed!
 
 # Select % of Zr atoms to swap
 percZrSwap = 25
-numSel = int((percZrSwap/100)*len(ZrIdx))
+numSel = int((percZrSwap//100)*len(ZrIdx))
 ZrSwap = np.random.choice(ZrIdx, size = numSel, replace=False)
 
 # Select corresponding % of Co/Ni atoms to swap
@@ -155,10 +152,79 @@ HEA_III_ZrSwap2 = ChangeElement(HEA_III_ZrSwap1, ZrSwap[int(len(ZrSwap)/2):-1], 
 
 HEA_partially_ordered = HEA_III_ZrSwap2.copy()
 
-view(HEA_partially_ordered)
+# view(HEA_partially_ordered)
 
 # 8) write to .lmp file
 
-lammpsdata.write_lammps_data('./HEA/HEA_I.lmp', HEA_disordered)
-lammpsdata.write_lammps_data('./HEA/HEA_II.lmp', HEA_ordered)
-lammpsdata.write_lammps_data('./HEA/HEA_III.lmp', HEA_partially_ordered)
+# Debugging
+
+# Function to check proportions
+def PropCheck (atoms, DesNum, DesAtNum):
+    TotNum = len(atoms.get_tags())
+    Idx = np.where(atoms.get_atomic_numbers() == DesAtNum)[0]
+    ActNum = len(Idx)
+    print('The desired number of atoms with Atomic Number ', DesAtNum, ' is: ', DesNum)
+    print('The actual number of with Atomic Number ', DesAtNum, ' is: ', ActNum)
+    if DesNum%ActNum==0:
+        print('Proportion Correct')
+        prop_check = 1
+    elif ActNum > DesNum and ActNum%DesNum < 2:
+        print('Proportion Correct')
+        prop_check = 1
+    elif DesNum > ActNum and DesNum%ActNum <2:
+        print('Proportion Correct')
+        prop_check = 1
+    else:
+        print('Proportion Incorrect')
+        prop_check = 0
+    return prop_check
+
+# check all lattices
+# Desired values
+CoDes = total_atoms//4
+NiDes = CoDes
+HfDes = total_atoms//6
+TiDes = HfDes
+ZrDes = HfDes
+DesNum = [CoDes, NiDes, HfDes, TiDes, ZrDes]
+
+print('Total Atoms = ', total_atoms, ' CoDes = ', CoDes, ' HfDes = ', HfDes)
+
+print('Checking HEA_ordered')
+for i in range(len(HEA_AtNum)):
+    # call checking function
+    HEA_II_prop_check = PropCheck(HEA_ordered, DesNum[i], HEA_AtNum[i])
+
+# ORDERED PASS
+
+print('Checking HEA_disordered')
+for i in range(len(HEA_AtNum)):
+    # call checking function
+    HEA_I_prop_check = PropCheck(HEA_disordered, DesNum[i], HEA_AtNum[i])
+
+# DISORDERED FAILED
+
+print('Checking HEA_partially_ordered')
+for i in range(len(HEA_AtNum)):
+    # call checking function
+    HEA_III_prop_check = PropCheck(HEA_partially_ordered, DesNum[i], HEA_AtNum[i])
+
+# PARTIALLY ORDERED PASSED
+
+# Checking chemical symbol order
+
+# Conditional Export
+if HEA_I_prop_check == 1:
+    lammpsdata.write_lammps_data('./HEA/HEA_I.lmp', HEA_disordered)
+else:
+    print('Error: HEA_I Element composition incorrect. Please check code.')
+
+if HEA_II_prop_check == 1:
+    lammpsdata.write_lammps_data('./HEA/HEA_II.lmp', HEA_ordered)
+else:
+    print('Error: HEA_II Element composition incorrect Please check code.')
+
+if HEA_III_prop_check == 1:
+    lammpsdata.write_lammps_data('./HEA/HEA_III.lmp', HEA_partially_ordered)
+else:
+    print('Error: HEA_III Element composition incorrect. Please check code.')
