@@ -11,6 +11,10 @@
 # 6) write swapping def function to swap a percentage of Zr in sub lattice A
 # 7) replicating model III from paper
 # 8) export models as .lmp files
+########################################################
+# After initial code review, 2x bugs discovered
+# 1) Proportions of elements are not correct (return of the sith :( )
+# 2) Add spec order arguement to export function
 
 from ase import Atoms # importing atoms package
 from ase.io import vasp # for reading and writing vasp POSCAR input files
