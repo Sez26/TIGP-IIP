@@ -155,6 +155,11 @@ HEA_disordered = HEA_dis.copy()
 
 # find indices of Zr atoms (list comprehension)
 ZrIdx = np.where(HEA_ordered.get_atomic_numbers() == HEA_AtNum[4])[0]
+ZrIdxInt = ZrIdx.astype('int')
+CoIdx = np.where(HEA_ordered.get_atomic_numbers() == HEA_AtNum[0])[0]
+CoIdxInt = CoIdx.astype('int')
+NiIdx = np.where(HEA_ordered.get_atomic_numbers() == HEA_AtNum[1])[0]
+NiIdxInt = NiIdx.astype('int')
 # print('num Zr: ', len(ZrIdx)) # I don't understand how this is bigger than 576
 # fixed!
 # print('Indicies of ZrIdx = ', ZrIdx)
@@ -165,16 +170,22 @@ percZrSwap = 25
 numSel = int((percZrSwap/100)*len(ZrIdx))
 # print(type(numSel))
 # print(numSel)
-ZrSwap = np.random.choice(ZrIdx, size = numSel, replace=False)
-# print('ZrSwap = ', ZrSwap)
+ZrSwap = np.zeros([numSel//2-1, 2])
+ZrSwap = ZrSwap.astype('int')
+ZrSwap[:,0] = np.random.choice(CoIdxInt, size = (numSel//2-1), replace=False)
+ZrSwap[:,1] = np.random.choice(NiIdxInt, size = (numSel//2-1), replace=False)
+# ZrSwap = np.floor(ZrSwap)
+# print(ZrSwap)
 
 # Select corresponding % of Co/Ni atoms to swap
-CoNiSwap = np.random.choice(b2NiTi_Aidx, size = numSel, replace=False)
+CoNiSwap = np.random.choice(ZrIdxInt, size = numSel, replace=False)
 # print('CoNiSwap = ', CoNiSwap)
 # Swap 'em, total proportions of Co and Ni atoms must remain constant (there half of swapees must be Co the other Ni)
-HEA_III_CoNiSwap = ChangeElement(HEA_ordered, CoNiSwap, HEA_ChemSym[4])
-HEA_III_ZrSwap1 = ChangeElement(HEA_III_CoNiSwap, ZrSwap[0:len(ZrSwap)//2], HEA_ChemSym[0])
-HEA_III_ZrSwap2 = ChangeElement(HEA_III_ZrSwap1, ZrSwap[len(ZrSwap)//2:-1], HEA_ChemSym[1])
+# I should recode this to randomly select from Co indices and Ni indices
+HEA_III_CoSwap = ChangeElement(HEA_ordered, CoNiSwap[0:len(CoNiSwap)//2-1], HEA_ChemSym[0])
+HEA_III_NiSwap = ChangeElement(HEA_III_CoSwap, CoNiSwap[len(CoNiSwap)//2:-1], HEA_ChemSym[1])
+HEA_III_ZrSwap1 = ChangeElement(HEA_III_NiSwap, ZrSwap[:,0], HEA_ChemSym[4])
+HEA_III_ZrSwap2 = ChangeElement(HEA_III_ZrSwap1, ZrSwap[:,1], HEA_ChemSym[4])
 
 HEA_partially_ordered = HEA_III_ZrSwap2.copy()
 
@@ -232,23 +243,26 @@ DesNum = [CoDes, NiDes, HfDes, TiDes, ZrDes]
 print('Total Atoms = ', total_atoms, ' CoDes = ', CoDes, ' HfDes = ', HfDes)
 
 print('Checking HEA_ordered')
+HEA_II_prop_check = np.zeros([len(HEA_AtNum),1])
 for i in range(len(HEA_AtNum)):
     # call checking function
-    HEA_II_prop_check = PropCheck(HEA_ordered, DesNum[i], HEA_AtNum[i])
+    HEA_II_prop_check[i] = PropCheck(HEA_ordered, DesNum[i], HEA_AtNum[i])
 
 # ORDERED PASS
 
 print('Checking HEA_disordered')
+HEA_I_prop_check = np.zeros([len(HEA_AtNum),1])
 for i in range(len(HEA_AtNum)):
     # call checking function
-    HEA_I_prop_check = PropCheck(HEA_disordered, DesNum[i], HEA_AtNum[i])
+    HEA_I_prop_check[i] = PropCheck(HEA_disordered, DesNum[i], HEA_AtNum[i])
 
 # DISORDERED PASS
 
 print('Checking HEA_partially_ordered')
+HEA_III_prop_check = np.zeros([len(HEA_AtNum),1])
 for i in range(len(HEA_AtNum)):
     # call checking function
-    HEA_III_prop_check = PropCheck(HEA_partially_ordered, DesNum[i], HEA_AtNum[i])
+    HEA_III_prop_check[i] = PropCheck(HEA_partially_ordered, DesNum[i], HEA_AtNum[i])
 
 # PARTIALLY ORDERED PASSED
 
@@ -265,19 +279,22 @@ spec_order = sorted(HEA_ChemSym)
 # print('Spec order: ', spec_order)
 
 # Conditional Export
-if HEA_I_prop_check == 1:
+if sum(HEA_I_prop_check) == len(HEA_AtNum):
+    print('All tests passed for HEA_I')
     # lammpsdata.write_lammps_data('./HEA/HEA_I.lmp', HEA_disordered, specorder = spec_order)
     write('./HEA/HEA_I.lmp', HEA_disordered, format = 'lammps-data',specorder = spec_order)
 else:
     print('Error: HEA_I Element composition incorrect. Please check code.')
 
-if HEA_II_prop_check == 1:
+if sum(HEA_II_prop_check) == len(HEA_AtNum):
+    print('All tests passed for HEA_II')
     # lammpsdata.write_lammps_data('./HEA/HEA_II.lmp', HEA_ordered, specorder = spec_order)
     write('./HEA/HEA_II.lmp', HEA_ordered, format = 'lammps-data',specorder = spec_order)
 else:
     print('Error: HEA_II Element composition incorrect Please check code.')
 
-if HEA_III_prop_check == 1:
+if sum(HEA_III_prop_check) == len(HEA_AtNum):
+    print('All tests passed for HEA_III')
     # lammpsdata.write_lammps_data('./HEA/HEA_III.lmp', HEA_partially_ordered, specorder = spec_order)
     write('./HEA/HEA_III.lmp', HEA_partially_ordered, format = 'lammps-data',specorder = spec_order)
 else:
