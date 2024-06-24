@@ -182,7 +182,8 @@ CoNiSwap = np.random.choice(ZrIdxInt, size = numSel, replace=False)
 # print('CoNiSwap = ', CoNiSwap)
 # Swap 'em, total proportions of Co and Ni atoms must remain constant (there half of swapees must be Co the other Ni)
 # I should recode this to randomly select from Co indices and Ni indices
-HEA_III_CoSwap = ChangeElement(HEA_ordered, CoNiSwap[0:len(CoNiSwap)//2-1], HEA_ChemSym[0])
+Working_HEA = HEA_ordered.copy()
+HEA_III_CoSwap = ChangeElement(Working_HEA, CoNiSwap[0:len(CoNiSwap)//2-1], HEA_ChemSym[0])
 HEA_III_NiSwap = ChangeElement(HEA_III_CoSwap, CoNiSwap[len(CoNiSwap)//2:-1], HEA_ChemSym[1])
 HEA_III_ZrSwap1 = ChangeElement(HEA_III_NiSwap, ZrSwap[:,0], HEA_ChemSym[4])
 HEA_III_ZrSwap2 = ChangeElement(HEA_III_ZrSwap1, ZrSwap[:,1], HEA_ChemSym[4])
@@ -200,16 +201,16 @@ def PropCheck (atoms, DesNum, DesAtNum):
     TotNum = len(atoms.get_tags())
     Idx = np.where(atoms.get_atomic_numbers() == DesAtNum)[0]
     ActNum = len(Idx)
-    print('The desired number of atoms with Atomic Number ', DesAtNum, ' is: ', DesNum)
-    print('The actual number of with Atomic Number ', DesAtNum, ' is: ', ActNum)
+    # print('The desired number of atoms with Atomic Number ', DesAtNum, ' is: ', DesNum)
+    # print('The actual number of with Atomic Number ', DesAtNum, ' is: ', ActNum)
     if DesNum%ActNum==0:
-        print('Proportion Correct')
+        # print('Proportion Correct')
         prop_check = 1
     elif ActNum > DesNum and ActNum%DesNum < 2:
-        print('Proportion Correct')
+        # print('Proportion Correct')
         prop_check = 1
     elif DesNum > ActNum and DesNum%ActNum <2:
-        print('Proportion Correct')
+        # print('Proportion Correct')
         prop_check = 1
     else:
         print('Proportion Incorrect')
@@ -267,9 +268,16 @@ for i in range(len(HEA_AtNum)):
 # PARTIALLY ORDERED PASSED
 
 # Check swapping
+print('Checking swapping in partially ordered')
 LatticeCheck(HEA_partially_ordered, HEA_AtNum[4])
 LatticeCheck(HEA_partially_ordered, HEA_AtNum[0])
 LatticeCheck(HEA_partially_ordered, HEA_AtNum[1])
+
+# Check swapping
+print('Checking swapping in ordered')
+LatticeCheck(HEA_ordered, HEA_AtNum[4])
+LatticeCheck(HEA_ordered, HEA_AtNum[0])
+LatticeCheck(HEA_ordered, HEA_AtNum[1])
 
 # Checking chemical symbol order
 # print(HEA_ordered.get_chemical_formula(mode='metal'))
