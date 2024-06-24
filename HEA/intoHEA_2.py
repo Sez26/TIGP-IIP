@@ -22,6 +22,7 @@ from ase.visualize import view
 import numpy as np
 import random
 from ase.io import lammpsdata # for exporting (writing) to .lmp file
+from ase.io import write # exporting trial 2
 
 # importing poscar
 # specifying path to file
@@ -38,7 +39,7 @@ b2NiTi_B = b2NiTi_atNum == 22 # not necessarily needed because only 2 sublattice
 b2NiTi_Aidx = np.where(b2NiTi_A == True)[0] # finding the indicies, [0] to change from tuple type O/P into np.array
 b2NiTi_Bidx = np.where(b2NiTi_B == True)[0]
 
-print('length of sublattice index arrays: ', len(b2NiTi_Aidx))
+print('Length of sublattice index arrays: ', len(b2NiTi_Aidx))
 
 # 2) Assigning tags
 # sublattice A atoms are tagged with 1, sublattice B tagged 0
@@ -71,12 +72,12 @@ HEA_ChemSym = ['Co', 'Ni', 'Hf', 'Ti', 'Zr']
 
 # finding total number of atoms in each lattice
 total_atoms = int(len(b2NiTi.get_tags()))
-print(total_atoms)
-print(type(total_atoms))
+# print(total_atoms)
+# print(type(total_atoms))
 # for sublattice A, Co and Ni are in equal proportion
 numSel = total_atoms//4
-print(numSel)
-print(type(numSel))
+# print(numSel)
+# print(type(numSel))
 # print('num Co/Ni selected: ', numSel)
 SelAidx = np.random.choice(b2NiTi_Aidx, size = numSel, replace=False)
 
@@ -106,11 +107,11 @@ HEA_ordered = SubLatBZr_HEA.copy() # copy function for atoms object not equate
 # random selection
 # print(len(b2NiTi.get_tags()))
 # print(b2NiTi.get_tags().shape)
-numSel = total_atoms//6
-Selrand1 = np.random.choice(np.arange(0,len(b2NiTi.get_tags())), size = (3,numSel), replace=False)
-# print(Selrand1)
-numSel = total_atoms//4
-Selrand2 = np.random.choice(np.arange(0,len(b2NiTi.get_tags())), size = (2,numSel), replace=False)
+# numSel = total_atoms//6
+# Selrand1 = np.random.choice(np.arange(0,len(b2NiTi.get_tags())), size = (3,numSel), replace=False)
+# # print(Selrand1)
+# numSel = total_atoms//4
+# Selrand2 = np.random.choice(np.arange(0,len(b2NiTi.get_tags())), size = (2,numSel), replace=False)
 # print(Selrand2)
 
 # there is an error here because the ones selected in selrand1 can be reselected in selrand2 and reassigned. Therefore the proportions are fucked.
@@ -156,19 +157,24 @@ HEA_disordered = HEA_dis.copy()
 ZrIdx = np.where(HEA_ordered.get_atomic_numbers() == HEA_AtNum[4])[0]
 # print('num Zr: ', len(ZrIdx)) # I don't understand how this is bigger than 576
 # fixed!
+# print('Indicies of ZrIdx = ', ZrIdx)
+# print(len(ZrIdx))
 
 # Select % of Zr atoms to swap
 percZrSwap = 25
-numSel = int((percZrSwap//100)*len(ZrIdx))
+numSel = int((percZrSwap/100)*len(ZrIdx))
+# print(type(numSel))
+# print(numSel)
 ZrSwap = np.random.choice(ZrIdx, size = numSel, replace=False)
+# print('ZrSwap = ', ZrSwap)
 
 # Select corresponding % of Co/Ni atoms to swap
 CoNiSwap = np.random.choice(b2NiTi_Aidx, size = numSel, replace=False)
-
+# print('CoNiSwap = ', CoNiSwap)
 # Swap 'em, total proportions of Co and Ni atoms must remain constant (there half of swapees must be Co the other Ni)
 HEA_III_CoNiSwap = ChangeElement(HEA_ordered, CoNiSwap, HEA_ChemSym[4])
-HEA_III_ZrSwap1 = ChangeElement(HEA_III_CoNiSwap, ZrSwap[0:int(len(ZrSwap)/2)], HEA_ChemSym[0])
-HEA_III_ZrSwap2 = ChangeElement(HEA_III_ZrSwap1, ZrSwap[int(len(ZrSwap)/2):-1], HEA_ChemSym[1])
+HEA_III_ZrSwap1 = ChangeElement(HEA_III_CoNiSwap, ZrSwap[0:len(ZrSwap)//2], HEA_ChemSym[0])
+HEA_III_ZrSwap2 = ChangeElement(HEA_III_ZrSwap1, ZrSwap[len(ZrSwap)//2:-1], HEA_ChemSym[1])
 
 HEA_partially_ordered = HEA_III_ZrSwap2.copy()
 
@@ -198,6 +204,21 @@ def PropCheck (atoms, DesNum, DesAtNum):
         print('Proportion Incorrect')
         prop_check = 0
     return prop_check
+
+# Function to check success of swapping (whether there is Zr present in lattice A)
+def LatticeCheck(atoms, DesAtNum):
+    SearchAtoms = atoms.get_atomic_numbers() == DesAtNum
+    GetLatA = atoms.get_tags()==1
+    GetLatB = atoms.get_tags()==0
+    # check if desired element is in lattice A and B
+    if sum(GetLatA*SearchAtoms)!=0:
+        print('Elements with atomic number ', DesAtNum, ' is present in lattice A.')
+        print('Number of desired element atoms in lattice A: ', sum(GetLatA*SearchAtoms))
+    if sum(GetLatB*SearchAtoms)!=0:
+        print('Elements with atomic number ', DesAtNum, ' is present in lattice B.')
+        print('Number of desired element atoms in lattice B: ', sum(GetLatB*SearchAtoms))
+    else:
+        print('Error: Desired element not found')
 
 # check all lattices
 # Desired values
@@ -231,6 +252,11 @@ for i in range(len(HEA_AtNum)):
 
 # PARTIALLY ORDERED PASSED
 
+# Check swapping
+LatticeCheck(HEA_partially_ordered, HEA_AtNum[4])
+LatticeCheck(HEA_partially_ordered, HEA_AtNum[0])
+LatticeCheck(HEA_partially_ordered, HEA_AtNum[1])
+
 # Checking chemical symbol order
 # print(HEA_ordered.get_chemical_formula(mode='metal'))
 # print(type(HEA_ordered.get_chemical_formula(mode='metal')))
@@ -240,16 +266,19 @@ spec_order = sorted(HEA_ChemSym)
 
 # Conditional Export
 if HEA_I_prop_check == 1:
-    lammpsdata.write_lammps_data('./HEA/HEA_I.lmp', HEA_disordered, specorder = spec_order)
+    # lammpsdata.write_lammps_data('./HEA/HEA_I.lmp', HEA_disordered, specorder = spec_order)
+    write('./HEA/HEA_I.lmp', HEA_disordered, format = 'lammps-data',specorder = spec_order)
 else:
     print('Error: HEA_I Element composition incorrect. Please check code.')
 
 if HEA_II_prop_check == 1:
-    lammpsdata.write_lammps_data('./HEA/HEA_II.lmp', HEA_ordered, specorder = spec_order)
+    # lammpsdata.write_lammps_data('./HEA/HEA_II.lmp', HEA_ordered, specorder = spec_order)
+    write('./HEA/HEA_II.lmp', HEA_ordered, format = 'lammps-data',specorder = spec_order)
 else:
     print('Error: HEA_II Element composition incorrect Please check code.')
 
 if HEA_III_prop_check == 1:
-    lammpsdata.write_lammps_data('./HEA/HEA_III.lmp', HEA_partially_ordered, specorder = spec_order)
+    # lammpsdata.write_lammps_data('./HEA/HEA_III.lmp', HEA_partially_ordered, specorder = spec_order)
+    write('./HEA/HEA_III.lmp', HEA_partially_ordered, format = 'lammps-data',specorder = spec_order)
 else:
     print('Error: HEA_III Element composition incorrect. Please check code.')
