@@ -232,19 +232,24 @@ for i in range(len(HEA_AtNum)):
 # PARTIALLY ORDERED PASSED
 
 # Checking chemical symbol order
+# print(HEA_ordered.get_chemical_formula(mode='metal'))
+# print(type(HEA_ordered.get_chemical_formula(mode='metal')))
+# gives the metals in alphabetical order
+spec_order = sorted(HEA_ChemSym)
+# print('Spec order: ', spec_order)
 
 # Conditional Export
 if HEA_I_prop_check == 1:
-    lammpsdata.write_lammps_data('./HEA/HEA_I.lmp', HEA_disordered)
+    lammpsdata.write_lammps_data('./HEA/HEA_I.lmp', HEA_disordered, specorder = spec_order)
 else:
     print('Error: HEA_I Element composition incorrect. Please check code.')
 
 if HEA_II_prop_check == 1:
-    lammpsdata.write_lammps_data('./HEA/HEA_II.lmp', HEA_ordered)
+    lammpsdata.write_lammps_data('./HEA/HEA_II.lmp', HEA_ordered, specorder = spec_order)
 else:
     print('Error: HEA_II Element composition incorrect Please check code.')
 
 if HEA_III_prop_check == 1:
-    lammpsdata.write_lammps_data('./HEA/HEA_III.lmp', HEA_partially_ordered)
+    lammpsdata.write_lammps_data('./HEA/HEA_III.lmp', HEA_partially_ordered, specorder = spec_order)
 else:
     print('Error: HEA_III Element composition incorrect. Please check code.')
