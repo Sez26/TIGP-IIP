@@ -16,6 +16,8 @@
 # 1) Proportions of elements are not correct (return of the sith :( )
 # 2) Add spec order arguement to export function
 
+# spoiler there were loads more bugs
+
 from ase import Atoms # importing atoms package
 from ase.io import vasp # for reading and writing vasp POSCAR input files
 from ase.visualize import view
