@@ -114,19 +114,39 @@ Selrand2 = np.random.choice(np.arange(0,len(b2NiTi.get_tags())), size = (2,numSe
 # print(Selrand2)
 
 # there is an error here because the ones selected in selrand1 can be reselected in selrand2 and reassigned. Therefore the proportions are fucked.
+# two routes for fixing. Quick and dirty: 1) floor divide by 12 and get assign 12 arrays but then combine to get the desired total number of selected.
+# 2) select each thing then remove those indices from the original and call next proportions
+# Wow that was really badly explained but yeah hopefully makes a bit of sense.
 
+numSelArr = [total_atoms//4, total_atoms//4, total_atoms//6, total_atoms//6, total_atoms//6]
+# SelRand = np.zeros(max(numSelArr), len(numSelArr))
+AtomIdx = np.arange(0,len(b2NiTi.get_tags()))
+HEA_dis = b2NiTi
+for i in range(len(numSelArr)):
+    SelRandi = np.random.choice(AtomIdx, size = numSelArr[i], replace = False)
+    # # Add SelRand to Array
+    # SelRand[0:len(SelRandi),i] = SelRandi
+    # Redefine AtomIdx
+    AtomIdx = np.setdiff1d(AtomIdx, SelRandi)
+    HEA_dis_new = ChangeElement(HEA_dis, SelRandi, HEA_ChemSym[i])
+    HEA_dis = HEA_dis_new.copy()
+
+
+
+# Can combine these two for loops!
 # Call replacement function
-HEA_Co_Ni = b2NiTi
-for i in [0,1]:
-    HEA_Co_Ni_new = ChangeElement(HEA_Co_Ni, Selrand2[i,:], HEA_ChemSym[i])
-    HEA_Co_Ni = HEA_Co_Ni_new
 
-HEA_Hf_Ti_Zr = HEA_Co_Ni
-for i in [0,1,2]:
-    HEA_Hf_Ti_Zr_new = ChangeElement(HEA_Hf_Ti_Zr, Selrand1[i,:], HEA_ChemSym[i+2])
-    HEA_Hf_Ti_Zr = HEA_Hf_Ti_Zr_new
+# for i in range(len(numSelArr)):
+    
+#     HEA_dis_new = ChangeElement(HEA_dis, SelRand[SelRand != 0], HEA_ChemSym[i])
+#     HEA_dis = HEA_dis_new
 
-HEA_disordered = HEA_Hf_Ti_Zr.copy()
+# HEA_Hf_Ti_Zr = HEA_Co_Ni
+# for i in [0,1,2]:
+#     HEA_Hf_Ti_Zr_new = ChangeElement(HEA_Hf_Ti_Zr, Selrand1[i,:], HEA_ChemSym[i+2])
+#     HEA_Hf_Ti_Zr = HEA_Hf_Ti_Zr_new
+
+HEA_disordered = HEA_dis.copy()
 
 # view(HEA_disordered)
 
@@ -202,7 +222,7 @@ for i in range(len(HEA_AtNum)):
     # call checking function
     HEA_I_prop_check = PropCheck(HEA_disordered, DesNum[i], HEA_AtNum[i])
 
-# DISORDERED FAILED
+# DISORDERED PASS
 
 print('Checking HEA_partially_ordered')
 for i in range(len(HEA_AtNum)):
