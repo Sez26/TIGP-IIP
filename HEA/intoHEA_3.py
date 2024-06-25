@@ -236,7 +236,6 @@ LatticeCheck(HEA_ordered, HEA_AtNum[1])
 # gives the metals in alphabetical order
 # Co, Hf, Ni, Ti, Zr
 spec_order = sorted(HEA_ChemSym)
-print(type(spec_order))
 
 # Conditional Export
 if sum(HEA_I_prop_check) == len(HEA_AtNum):
@@ -259,3 +258,5 @@ if sum(HEA_III_prop_check) == len(HEA_AtNum):
     # write('./HEA/HEA_III.lmp', HEA_partially_ordered, format = 'lammps-data',specorder = spec_order)
 else:
     print('Error: HEA_III Element composition incorrect. Please check code.')
+
+# lammpsdata.write_lammps_data('./HEA/HEA_II_test.lmp', HEA_ordered, spec_order, write_image_flags = True)

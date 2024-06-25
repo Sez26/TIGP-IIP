@@ -35,9 +35,11 @@ coefficients = np.polyfit(lmps_table[:,0], lmps_table[:,1], 1)  # 1 means linear
 m, c = coefficients
 
 # Add text annotation
-text_x = 300
+text_x = 500
 text_y = 0
-plt.text(text_x, text_y, ['Thermal expansion coefficient is: ', m, 'K^-1'], fontsize=12, color='green')
+alpha = '\u03B1'
+label_text = f"{alpha}={m}"
+plt.text(text_x, text_y, label_text, fontsize=12)
 
 # print('Thermal expansion coefficient is: ', m, 'K^-1')
 
