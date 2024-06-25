@@ -227,15 +227,23 @@ LatticeCheck(HEA_partially_ordered, HEA_AtNum[0])
 LatticeCheck(HEA_partially_ordered, HEA_AtNum[1])
 
 # Check swapping
-print('Checking swapping in ordered')
-LatticeCheck(HEA_ordered, HEA_AtNum[4])
-LatticeCheck(HEA_ordered, HEA_AtNum[0])
-LatticeCheck(HEA_ordered, HEA_AtNum[1])
+# print('Checking swapping in ordered')
+# LatticeCheck(HEA_ordered, HEA_AtNum[4])
+# LatticeCheck(HEA_ordered, HEA_AtNum[0])
+# LatticeCheck(HEA_ordered, HEA_AtNum[1])
+
+# Check swapping
+print('Checking Ti and Hf in partially ordered')
+LatticeCheck(HEA_partially_ordered, HEA_AtNum[2])
+LatticeCheck(HEA_partially_ordered, HEA_AtNum[3])
 
 # Checking chemical symbol order
 # gives the metals in alphabetical order
 # Co, Hf, Ni, Ti, Zr
-spec_order = sorted(HEA_ChemSym)
+
+# MAKE CONSISTENT WITH SNAP PAIR COEFFICIENTS
+# Ni, Co, Ti, Zr, Hf
+spec_order = ['Ni', 'Co', 'Ti', 'Zr', 'Hf']
 
 # Conditional Export
 if sum(HEA_I_prop_check) == len(HEA_AtNum):
@@ -258,5 +266,3 @@ if sum(HEA_III_prop_check) == len(HEA_AtNum):
     # write('./HEA/HEA_III.lmp', HEA_partially_ordered, format = 'lammps-data',specorder = spec_order)
 else:
     print('Error: HEA_III Element composition incorrect. Please check code.')
-
-# lammpsdata.write_lammps_data('./HEA/HEA_II_test.lmp', HEA_ordered, spec_order, write_image_flags = True)

@@ -285,7 +285,7 @@ LatticeCheck(HEA_ordered, HEA_AtNum[1])
 # print(HEA_ordered.get_chemical_formula(mode='metal'))
 # print(type(HEA_ordered.get_chemical_formula(mode='metal')))
 # gives the metals in alphabetical order
-spec_order = sorted(HEA_ChemSym)
+spec_order = sorted(HEA_ChemSym) # just try unsorted spec order
 # print('Spec order: ', spec_order)
 
 # Conditional Export
