@@ -1,17 +1,31 @@
-## importing poscar from atomsk
-## editing to turn from 2 element B2 structure into 5 element HEA
-
+"""
+Generating a lattice using ASE functions (rather than atomsk to keep it all in one script) THIS DIDN'T WORK LOL
+Editing to turn it into a 5 element HEA (maybe the lattice could orginally be generated as a 5 element HEA)
+Making a larger lattice model to test the validity of the SNAP potentials on it
+"""
 from ase import Atoms # importing atoms package
 from ase.io import vasp # for reading and writing vasp POSCAR input files
 from ase.visualize import view
 import numpy as np
 import random
 from ase.io import lammpsdata # for exporting (writing) to .lmp file
-from ase.io import write # exporting trial 2
+# from ase.lattice.cubic import FaceCenteredCubicFactory
+
+# class NiTiFactory(FaceCenteredCubicFactory):
+#     """Making a NiTi BCC (B2) lattice"""
+#     bravais_basis = [[0, 0, 0], [0.5, 0.5, 0.5]]
+#     element_basis = (0, 1)
+#     # directions = [[100], [010], [001]]
+
+# b2NiTi = NiTi = NiTiFactory()
+# view(b2NiTi)
+
+# Working Directory
+wDir = '/home/sez26/TIGP-IIP/LargeHEA/'
 
 # importing poscar
 # specifying path to file
-PoscarFile = '/home/sez26/TIGP-IIP/HEA/smallPos'
+PoscarFile = wDir + 'POSCAR'
 b2NiTi = vasp.read_vasp(PoscarFile) # vasp.read_vasp function reads POSCAR files as Atoms type
 
 # 1) Split coordinates into sublattice A and B
@@ -229,21 +243,21 @@ spec_order = ['Ni', 'Co', 'Ti', 'Zr', 'Hf']
 # Conditional Export
 if sum(HEA_I_prop_check) == len(HEA_AtNum):
     print('All tests passed for HEA_I')
-    lammpsdata.write_lammps_data('./HEA/HEA_I.lmp', HEA_disordered, spec_order)
+    lammpsdata.write_lammps_data(wDir+'HEA_I.lmp', HEA_disordered, spec_order)
     # write('./HEA/HEA_I.lmp', HEA_disordered, format = 'lammps-data',specorder = spec_order)
 else:
     print('Error: HEA_I Element composition incorrect. Please check code.')
 
 if sum(HEA_II_prop_check) == len(HEA_AtNum):
     print('All tests passed for HEA_II')
-    lammpsdata.write_lammps_data('./HEA/HEA_II.lmp', HEA_ordered, spec_order)
+    lammpsdata.write_lammps_data(wDir+'HEA_II.lmp', HEA_ordered, spec_order)
     # write('./HEA/HEA_II.lmp', HEA_ordered, format = 'lammps-data',specorder = spec_order)
 else:
     print('Error: HEA_II Element composition incorrect Please check code.')
 
 if sum(HEA_III_prop_check) == len(HEA_AtNum):
     print('All tests passed for HEA_III')
-    lammpsdata.write_lammps_data('./HEA/HEA_III.lmp', HEA_partially_ordered, spec_order)
+    lammpsdata.write_lammps_data(wDir+'HEA_III.lmp', HEA_partially_ordered, spec_order)
     # write('./HEA/HEA_III.lmp', HEA_partially_ordered, format = 'lammps-data',specorder = spec_order)
 else:
     print('Error: HEA_III Element composition incorrect. Please check code.')
