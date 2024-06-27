@@ -5,64 +5,86 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def LoadLAMMPSResTxt(filename):
+DirPath = './HEA_compression/LMP_Files/'
+
+def LoadLAMMPSResTxt(filename, dim):
     # load data
     with open(filename, 'r') as lmps_file:
         lmps_data = lmps_file.readlines()
 
     # print(lmps_data)
 
-    # create new array
-    lmps_table = np.empty((len(lmps_data)-1, 2))
-    for i in range(1,len(lmps_data)):
-        before, sep, after = lmps_data[i].partition('\t')
+    # setting dimensions
+    [rows, columns] = dim
+
+    # create new array for results
+    lmps_table = np.empty((rows-1, columns))
+    for i in range(1,rows):
+        before, sep, after = lmps_data[i].partition(' ')
         lmps_table[i-1, 0] = before
-        before, sep, after = after.partition('\n')
-        lmps_table[i-1, 1] = before
-    return lmps_table
+        for j in range(1,columns-1):
+            before, sep, after = after.partition(' ')
+            lmps_table[i-1, j] = before
+        lmps_table[i-1, -1] = after
+
+    print(lmps_table)
+    # create new nested list for titles
+    titles = [None] * columns
+    before, sep, after = lmps_data[0].partition('  ')
+    titles[0] = before
+    for j in range(1,columns-1):
+        before, sep, after = after.partition('  ')
+        titles[j] = before
+    before, sep, after = after.partition('  \n')
+    titles[-1] = before
+    print(titles)
+    return lmps_table, titles
 
 # Loading all results
-HEA_I_therm_exp = LoadLAMMPSResTxt('./HEA/Therm_Exp_Res/HEA_I_Res.txt')
-HEA_II_therm_exp = LoadLAMMPSResTxt('./HEA/Therm_Exp_Res/HEA_II_Res.txt')
-HEA_III_therm_exp = LoadLAMMPSResTxt('./HEA/Therm_Exp_Res/HEA_III_Res.txt')
+FilePathArr = ['100/SS_curve_100.txt', '110/SS_curve_110.txt', '111/SS_curve_111.txt']
+numfile = 3
+res_rows = 22
+res_columns = 4
 
-plt.plot(HEA_I_therm_exp[:,0], HEA_I_therm_exp[:,1], 'k')
-plt.plot(HEA_II_therm_exp[:,0], HEA_II_therm_exp[:,1], 'r')
-plt.plot(HEA_III_therm_exp[:,0], HEA_III_therm_exp[:,1], 'b')
+Res_Read = np.empty((numfile, res_rows-1, res_columns)) # minus one to remove title rows
+Res_Col_Titles = titles = [None] * numfile
+for i in range(0, numfile):
+    FilePath = DirPath + FilePathArr[i]
+    Res_Read[i, :, :], Res_Col_Titles[i] = LoadLAMMPSResTxt(FilePath, [res_rows, res_columns])
 
-plt.title('Thermal expansion of HEA')
-plt.xlabel('Temperature (K)')
-plt.ylabel('Strain')
-plt.grid(True)
-legend_text = ['HEA I', 'HEA II', 'HEA_III']
-plt.legend(legend_text)
+# Create a figure with a numfilex1 grid of subplots
+fig, axs = plt.subplots(numfile, 1, figsize=(10, 8))
 
-# Calculating thermal expansion coefficient
-coefficients_I = np.polyfit(HEA_I_therm_exp[:,0], HEA_I_therm_exp[:,1], 1)  # 1 means linear fit
-m_I, c_I = coefficients_I
-coefficients_II = np.polyfit(HEA_II_therm_exp[:,0], HEA_II_therm_exp[:,1], 1)  # 1 means linear fit
-m_II, c_II = coefficients_II
-coefficients_III = np.polyfit(HEA_III_therm_exp[:,0], HEA_III_therm_exp[:,1], 1)  # 1 means linear fit
-m_III, c_III = coefficients_III
+# looping the plotting
+for i in range(0, numfile):
+    axs[i].plot(Res_Read[i, :, 0], Res_Read[i, :, 1:-1])
+    axs[i].legend(Res_Col_Titles[i+1:-1][:])
+
+# plt.title('Thermal expansion of HEA')
+# plt.xlabel('Temperature (K)')
+# plt.ylabel('Strain')
+# plt.grid(True)
+# legend_text = ['HEA I', 'HEA II', 'HEA_III']
+# plt.legend(legend_text)
 
 # Add text annotation
-text_x = 800
-text_y = 0
-text_y = 0
-# unicode stuff
-alpha = '\u03B1'
-# subscripts
-sub_i = '\u1D62'
-label_text = f"""
-{alpha}{sub_i}={m_I:.3e}
-{alpha}{sub_i}{sub_i}={m_II:.3e}
-{alpha}{sub_i}{sub_i}{sub_i}={m_III:.3e}
-"""
-plt.text(text_x, text_y, label_text, fontsize=12)
+# text_x = 800
+# text_y = 0
+# text_y = 0
+# # unicode stuff
+# alpha = '\u03B1'
+# # subscripts
+# sub_i = '\u1D62'
+# label_text = f"""
+# {alpha}{sub_i}={m_I:.3e}
+# {alpha}{sub_i}{sub_i}={m_II:.3e}
+# {alpha}{sub_i}{sub_i}{sub_i}={m_III:.3e}
+# """
+# plt.text(text_x, text_y, label_text, fontsize=12)
 
 # save figure
 
-plt.savefig('./HEA/Therm_Exp_Res/results_fig.png', format = 'png')
+# plt.savefig('./HEA/Therm_Exp_Res/results_fig.png', format = 'png')
 
 plt.show()
 
