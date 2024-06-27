@@ -18,17 +18,25 @@ wDir = '/home/sez26/TIGP-IIP/HEA_compression/LMP_Files/111/'
 PoscarFile = wDir + 'POSCAR'
 b2NiTi = vasp.read_vasp(PoscarFile) # vasp.read_vasp function reads POSCAR files as Atoms type
 
+# view(b2NiTi)
 # 1) Split coordinates into sublattice A and B
 b2NiTi_atNum = b2NiTi.get_atomic_numbers()
 
 # logical arrays
-b2NiTi_A = b2NiTi_atNum == 28
-b2NiTi_B = b2NiTi_atNum == 22 # not necessarily needed because only 2 sublattices
+b2NiTi_A = b2NiTi_atNum == 28 # Ni
+b2NiTi_B = b2NiTi_atNum == 22 # Ti # not necessarily needed because only 2 sublattices
 
 b2NiTi_Aidx = np.where(b2NiTi_A == True)[0] # finding the indicies, [0] to change from tuple type O/P into np.array
 b2NiTi_Bidx = np.where(b2NiTi_B == True)[0]
 
-# print('Length of sublattice index arrays: ', len(b2NiTi_Aidx))
+print('Number of sublattice A atoms: ', len(b2NiTi_Aidx))
+print('Number of sublattice B atoms: ', len(b2NiTi_Bidx))
+
+numAatoms = len(b2NiTi_Aidx)
+numBatoms = len(b2NiTi_Bidx)
+
+# they aren't the bloody same!!
+# need to make proportions consistent with sublattice size
 
 # 2) Assigning tags
 # sublattice A atoms are tagged with 1, sublattice B tagged 0
@@ -59,7 +67,7 @@ HEA_ChemSym = ['Co', 'Ni', 'Hf', 'Ti', 'Zr']
 total_atoms = int(len(b2NiTi.get_tags()))
 
 # for sublattice A, Co and Ni are in equal proportion
-numSel = total_atoms//4
+numSel = numAatoms//2
 
 SelAidx = np.random.choice(b2NiTi_Aidx, size = numSel, replace=False)
 
@@ -68,7 +76,7 @@ SubLatA_HEA = ChangeElement(b2NiTi, SelAidx, HEA_ChemSym[0])
 
 # Similar for sublattice B
 # for sublattice B, Hf, Ti, and Zr are in equal proportion
-numSel = total_atoms//6
+numSel = numBatoms//3
 
 SelBidx = np.random.choice(b2NiTi_Bidx, size = (2,numSel), replace=False)
 
@@ -139,11 +147,16 @@ HEA_partially_ordered = HEA_III_ZrSwap2.copy()
 # Function to check proportions
 # Need to make this more robust as there is a surplus of 2 therefore the lattice should pass
 # make the conditional dependent on lattice dimensions and desired proportions rather than inflexible 2
+# need to add a zero check too
 def PropCheck (atoms, DesNum, DesAtNum):
     TotNum = len(atoms.get_tags())
     Idx = np.where(atoms.get_atomic_numbers() == DesAtNum)[0]
     ActNum = len(Idx)
-    if DesNum%ActNum==0:
+    # zero check
+    if ActNum == 0 and DesNum != 0:
+        print('Zero atoms of atomic mass: ', DesAtNum,'. Please check code.')
+        prop_check = 0
+    elif DesNum%ActNum==0:
         # print('Proportion Correct')
         prop_check = 1
     elif ActNum > DesNum and ActNum%DesNum <= 2:
@@ -174,9 +187,9 @@ def LatticeCheck(atoms, DesAtNum):
 
 # check all lattices
 # Desired values
-CoDes = total_atoms//4
+CoDes = numAatoms//2
 NiDes = CoDes
-HfDes = total_atoms//6
+HfDes = numBatoms//3
 TiDes = HfDes
 ZrDes = HfDes
 DesNum = [CoDes, NiDes, HfDes, TiDes, ZrDes]
