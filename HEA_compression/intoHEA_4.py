@@ -9,19 +9,9 @@ from ase.visualize import view
 import numpy as np
 import random
 from ase.io import lammpsdata # for exporting (writing) to .lmp file
-# from ase.lattice.cubic import FaceCenteredCubicFactory
-
-# class NiTiFactory(FaceCenteredCubicFactory):
-#     """Making a NiTi BCC (B2) lattice"""
-#     bravais_basis = [[0, 0, 0], [0.5, 0.5, 0.5]]
-#     element_basis = (0, 1)
-#     # directions = [[100], [010], [001]]
-
-# b2NiTi = NiTi = NiTiFactory()
-# view(b2NiTi)
 
 # Working Directory
-wDir = '/home/sez26/TIGP-IIP/HEA_dislocation/Perfect/'
+wDir = '/home/sez26/TIGP-IIP/HEA_compression/LMP_Files/111/'
 
 # importing poscar
 # specifying path to file
@@ -38,7 +28,7 @@ b2NiTi_B = b2NiTi_atNum == 22 # not necessarily needed because only 2 sublattice
 b2NiTi_Aidx = np.where(b2NiTi_A == True)[0] # finding the indicies, [0] to change from tuple type O/P into np.array
 b2NiTi_Bidx = np.where(b2NiTi_B == True)[0]
 
-print('Length of sublattice index arrays: ', len(b2NiTi_Aidx))
+# print('Length of sublattice index arrays: ', len(b2NiTi_Aidx))
 
 # 2) Assigning tags
 # sublattice A atoms are tagged with 1, sublattice B tagged 0
@@ -88,7 +78,7 @@ SubLatBZr_HEA = ChangeElement(SubLatBHf_HEA, SelBidx[1,:], HEA_ChemSym[4])
 
 HEA_ordered = SubLatBZr_HEA.copy() # copy function for atoms object not equate
 
-# view(HEA_ordered)
+view(HEA_ordered)
 
 ############################################################
 
@@ -147,6 +137,8 @@ HEA_partially_ordered = HEA_III_ZrSwap2.copy()
 # Debugging
 
 # Function to check proportions
+# Need to make this more robust as there is a surplus of 2 therefore the lattice should pass
+# make the conditional dependent on lattice dimensions and desired proportions rather than inflexible 2
 def PropCheck (atoms, DesNum, DesAtNum):
     TotNum = len(atoms.get_tags())
     Idx = np.where(atoms.get_atomic_numbers() == DesAtNum)[0]
@@ -154,10 +146,10 @@ def PropCheck (atoms, DesNum, DesAtNum):
     if DesNum%ActNum==0:
         # print('Proportion Correct')
         prop_check = 1
-    elif ActNum > DesNum and ActNum%DesNum < 2:
+    elif ActNum > DesNum and ActNum%DesNum <= 2:
         # print('Proportion Correct')
         prop_check = 1
-    elif DesNum > ActNum and DesNum%ActNum <2:
+    elif DesNum > ActNum and DesNum%ActNum <= 2:
         # print('Proportion Correct')
         prop_check = 1
     else:
@@ -222,12 +214,6 @@ LatticeCheck(HEA_partially_ordered, HEA_AtNum[0])
 LatticeCheck(HEA_partially_ordered, HEA_AtNum[1])
 
 # Check swapping
-# print('Checking swapping in ordered')
-# LatticeCheck(HEA_ordered, HEA_AtNum[4])
-# LatticeCheck(HEA_ordered, HEA_AtNum[0])
-# LatticeCheck(HEA_ordered, HEA_AtNum[1])
-
-# Check swapping
 print('Checking Ti and Hf in partially ordered')
 LatticeCheck(HEA_partially_ordered, HEA_AtNum[2])
 LatticeCheck(HEA_partially_ordered, HEA_AtNum[3])
@@ -241,12 +227,12 @@ LatticeCheck(HEA_partially_ordered, HEA_AtNum[3])
 spec_order = ['Ni', 'Co', 'Ti', 'Zr', 'Hf']
 
 # Conditional Export
-if sum(HEA_I_prop_check) == len(HEA_AtNum):
-    print('All tests passed for HEA_I')
-    lammpsdata.write_lammps_data(wDir+'HEA_I.lmp', HEA_disordered, spec_order)
-    # write('./HEA/HEA_I.lmp', HEA_disordered, format = 'lammps-data',specorder = spec_order)
-else:
-    print('Error: HEA_I Element composition incorrect. Please check code.')
+# if sum(HEA_I_prop_check) == len(HEA_AtNum):
+#     print('All tests passed for HEA_I')
+#     lammpsdata.write_lammps_data(wDir+'HEA_I.lmp', HEA_disordered, spec_order)
+#     # write('./HEA/HEA_I.lmp', HEA_disordered, format = 'lammps-data',specorder = spec_order)
+# else:
+#     print('Error: HEA_I Element composition incorrect. Please check code.')
 
 if sum(HEA_II_prop_check) == len(HEA_AtNum):
     print('All tests passed for HEA_II')
@@ -255,9 +241,9 @@ if sum(HEA_II_prop_check) == len(HEA_AtNum):
 else:
     print('Error: HEA_II Element composition incorrect Please check code.')
 
-if sum(HEA_III_prop_check) == len(HEA_AtNum):
-    print('All tests passed for HEA_III')
-    lammpsdata.write_lammps_data(wDir+'HEA_III.lmp', HEA_partially_ordered, spec_order)
-    # write('./HEA/HEA_III.lmp', HEA_partially_ordered, format = 'lammps-data',specorder = spec_order)
-else:
-    print('Error: HEA_III Element composition incorrect. Please check code.')
+# if sum(HEA_III_prop_check) == len(HEA_AtNum):
+#     print('All tests passed for HEA_III')
+#     lammpsdata.write_lammps_data(wDir+'HEA_III.lmp', HEA_partially_ordered, spec_order)
+#     # write('./HEA/HEA_III.lmp', HEA_partially_ordered, format = 'lammps-data',specorder = spec_order)
+# else:
+#     print('Error: HEA_III Element composition incorrect. Please check code.')
