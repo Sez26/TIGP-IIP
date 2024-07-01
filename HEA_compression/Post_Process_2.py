@@ -27,7 +27,7 @@ def LoadLAMMPSResTxt(filename, dim):
             lmps_table[i-1, j] = before
         lmps_table[i-1, -1] = after
 
-    print(lmps_table)
+    # print(lmps_table)
     # create new nested list for titles
     titles = [None] * columns
     before, sep, after = lmps_data[0].partition('  ')
@@ -37,11 +37,12 @@ def LoadLAMMPSResTxt(filename, dim):
         titles[j] = before
     before, sep, after = after.partition('  \n')
     titles[-1] = before
-    print(titles)
+    # print(titles)
     return lmps_table, titles
 
 # Loading all results
 FilePathArr = ['100/SS_curve_100.txt', '110/SS_curve_110.txt', '111/SS_curve_111.txt']
+Figure_Titles = ['SS_curve_100', 'SS_curve_110', 'SS_curve_111']
 numfile = 3
 res_rows = 22
 res_columns = 4
@@ -52,39 +53,59 @@ for i in range(0, numfile):
     FilePath = DirPath + FilePathArr[i]
     Res_Read[i, :, :], Res_Col_Titles[i] = LoadLAMMPSResTxt(FilePath, [res_rows, res_columns])
 
+# getting Young's modulus (gradient)
+m = np.empty((numfile, 1, res_columns-1))
+c = np.empty((numfile, 1, res_columns-1))
+print(m.shape)
+for i in range(0, numfile):
+    for j in range(1,numfile):
+        m[i,0,j-1], c[i,0,j-1] = np.polyfit(Res_Read[i, :, 0], Res_Read[i,:,j], 1)  # 1 means linear fit
+
+print('m: ',m)
+print('c: ',c)
+
 # Create a figure with a numfilex1 grid of subplots
-fig, axs = plt.subplots(numfile, 1, figsize=(10, 8))
+fig, axs = plt.subplots(numfile, 1, figsize=(10, 8), gridspec_kw={'wspace': 0.5, 'hspace': 0.5})
 
 # looping the plotting
+text_x = 0.015
+text_y = 0.2
+# subscripts
+# for i in range(0, numfile):
+#     axs[i].plot(Res_Read[i, :, 0], Res_Read[i, :, 1:])
+#     axs[i].legend(Res_Col_Titles[i][1:])
+#     # figure titles and axes labels
+#     axs[i].set_title(Figure_Titles[i])
+#     axs[i].set_xlabel('Strain')
+#     axs[i].set_ylabel('Stress')
+#     # adding Young's Mod annotation
+#     label_text = f"""
+#     E_x={m[i,0,0]:.3e}
+#     E_y={m[i,0,1]:.3e}
+#     E_z={m[i,0,2]:.3e}
+#     """
+#     axs[i].text(text_x, text_y, label_text, fontsize=12)
+
+# for stress x only
 for i in range(0, numfile):
-    axs[i].plot(Res_Read[i, :, 0], Res_Read[i, :, 1:-1])
-    axs[i].legend(Res_Col_Titles[i+1:-1][:])
+    axs[i].plot(Res_Read[i, :, 0], Res_Read[i, :, 1])
+    # figure titles and axes labels
+    axs[i].set_title(Figure_Titles[i])
+    axs[i].set_xlabel('Strain')
+    axs[i].set_ylabel('Stress')
+    # adding Young's Mod annotation
+    label_text = f"""
+    E_x={m[i,0,0]:.3e}
+    """
+    # E_y={m[i,0,1]:.3e}
+    # E_z={m[i,0,2]:.3e}
+    # """
+    axs[i].text(text_x, text_y, label_text, fontsize=12)
 
-# plt.title('Thermal expansion of HEA')
-# plt.xlabel('Temperature (K)')
-# plt.ylabel('Strain')
-# plt.grid(True)
-# legend_text = ['HEA I', 'HEA II', 'HEA_III']
-# plt.legend(legend_text)
-
-# Add text annotation
-# text_x = 800
-# text_y = 0
-# text_y = 0
-# # unicode stuff
-# alpha = '\u03B1'
-# # subscripts
-# sub_i = '\u1D62'
-# label_text = f"""
-# {alpha}{sub_i}={m_I:.3e}
-# {alpha}{sub_i}{sub_i}={m_II:.3e}
-# {alpha}{sub_i}{sub_i}{sub_i}={m_III:.3e}
-# """
-# plt.text(text_x, text_y, label_text, fontsize=12)
 
 # save figure
 
-# plt.savefig('./HEA/Therm_Exp_Res/results_fig.png', format = 'png')
+plt.savefig(DirPath + 'results_fig.png', format = 'png')
 
 plt.show()
 
