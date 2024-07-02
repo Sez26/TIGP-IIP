@@ -2,6 +2,8 @@
 Using click to turn intoHEA script into something I can run from bash with input arguements!
 ie: commandline tool
 LETS GOOOOO
+
+When making click make sure filename is the same as the def function.
 """
 
 import click
@@ -40,8 +42,9 @@ def ChangeElement(atoms, idx, desChemSym):
 # argument names not case sensistive!
 def intoHEA_6(wdir):
     # intoducing help text
-    """ intoHEA_6.py is a function which converts a b2 crystal lattice into a ordered HEA.
+    """ intoHEA_6.py is a function which converts a b2 Ni, Ti crystal lattice into a ordered HEA.
     It requires an input of the path (WDIR) to the directory where a POSCAR file has been saved.
+    The output ordered HEA_II.lmp file will be saved into the same directory as the input POSCAR.
     Created by SF 2024 as part of TIGP-IIP project.
     """
     # importing poscar
