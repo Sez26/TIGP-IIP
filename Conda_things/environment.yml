@@ -6,7 +6,7 @@ channels:
 dependencies:
   - _libgcc_mutex=0.1=main
   - _openmp_mutex=5.1=1_gnu
-  - ase=3.22.1=pyhd8ed1ab_1
+  - ase=3.23.0=pyhd8ed1ab_0
   - blas=1.0=openblas
   - brotli=1.0.9=h5eee18b_7
   - brotli-bin=1.0.9=h5eee18b_7
