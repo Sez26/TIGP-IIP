@@ -5,7 +5,7 @@ set -e # makes the program stop if any of the commands fail
 ### careful no spaces when generating variables
 ### directory inputs
 base_path='/home/sez26/TIGP-IIP/Automation_Prep/Python/'
-project_name='test_project_3/'
+project_name='test_project_3'
 
 wdir='/home/sez26/TIGP-IIP/Automation_Prep/Python/'
 
@@ -26,8 +26,10 @@ project_path="$base_path$project_name"
 cd $project_path
 cd project/data/input
 $atomskdir --create bcc $latt_param Ni Ti orient [100] [010] [001] -duplicate $duplication $duplication $duplication pos
-python intoHEA_6.py ./ ./
+cd $base_path
+python intoHEA_6.py $project_path/project/data/input/ $project_path/project/data/input/
 
-latt_param=$(python Read_cfg_1.py $wdir 'min_dump.cfg'  $duplication)
+o_p=$(python Read_cfg_1.py $wdir 'min_dump.cfg'  $duplication)
+latt_param_new=$o_p
 
-echo "Revised lattice parameter: $latt_param"
+echo $latt_param_new

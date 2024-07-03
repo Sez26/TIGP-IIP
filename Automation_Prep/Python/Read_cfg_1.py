@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 import click
+import sys
 
 class LAMMPS_OP_CFGParser:
     def __init__(self, file_path):
@@ -68,15 +69,15 @@ def read_config(path, file_name, duplication):
     BB = parsed_data["BOX BOUNDS pp pp pp"]
     # print(len(BB))
     avg_latt_parameter = sum(BB.values())/len(BB)
-    print(avg_latt_parameter)
+    # print(avg_latt_parameter) # GAHHH you have to be so careful about printing stuff in click
 
     # divide by number of duplications
-    # duplications = 18
-    div_avg = avg_latt_parameter/duplication
+    duplications = 18
+    div_avg = avg_latt_parameter/duplications
 
     # click.echo(f"The new lattice parameter after minimisation is {div_avg}")
-
     return div_avg
 
 if __name__ == "__main__":
-    read_config()
+    div_avg = read_config.main(standalone_mode=False)
+    print(div_avg)
