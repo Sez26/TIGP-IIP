@@ -4,6 +4,8 @@
 
 ### directory inputs
 wdir='/home/sez26/TIGP-IIP/Automation_Prep/Python/'
+
+# ideally we want this to run from conda package
 atomskdir='/home/sez26/TIGP-IIP/atomsk_b0.13.1_Linux-amd64/atomsk'
 
 ### lattice generation specifics
