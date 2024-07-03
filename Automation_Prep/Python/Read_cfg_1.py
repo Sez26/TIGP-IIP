@@ -60,7 +60,7 @@ class LAMMPS_OP_CFGParser:
 @click.command()
 @click.argument('path', type=click.Path(exists=True, dir_okay=True))
 @click.argument('file_name')
-@click.argument('duplications', type=click.FLOAT)
+@click.argument('duplication', type=click.FLOAT)
 def read_config(path, file_name, duplication):
     file_path = Path(path + file_name)
     parser = LAMMPS_OP_CFGParser(file_path)

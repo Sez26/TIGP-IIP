@@ -39,8 +39,9 @@ def ChangeElement(atoms, idx, desChemSym):
 # introducing command
 @click.command()
 @click.argument('wdir', type=click.Path(exists=True, dir_okay=True))
+@click.argument('save_dir', type=click.Path(exists=True, dir_okay=True))
 # argument names not case sensistive!
-def intoHEA_6(wdir):
+def intoHEA_6(wdir, save_dir):
     # intoducing help text
     """ intoHEA_6.py is a function which converts a b2 Ni, Ti crystal lattice into a ordered HEA.
     It requires an input of the path (WDIR) to the directory where a POSCAR file has been saved.
@@ -94,7 +95,7 @@ def intoHEA_6(wdir):
     
     click.echo('Saving file.')
     spec_order = ['Ni', 'Co', 'Ti', 'Zr', 'Hf']
-    save_file_name = wdir + 'HEA_II.lmp'
+    save_file_name = save_dir + 'HEA_II.lmp'
     lammpsdata.write_lammps_data(save_file_name, HEA_ordered, specorder = spec_order)
 
 # running function
