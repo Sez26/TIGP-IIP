@@ -1,14 +1,17 @@
 """
 making a file system for a HEA LAMMPS project
 this code is mostly copied from chatGPT
+
+adapted to include click
 """
 
 import os
 from pathlib import Path
+import click
 
 directory_structure = {
     "project": {
-        "scripts": [],
+        # "scripts": [],
         "data": {
             "input": [],
             "output": []
@@ -43,12 +46,14 @@ def create_structure(base_path, structure):
             if not current_path.exists():
                 current_path.touch()
 
-def setup_test_environment(base_path):
-    base_path = Path(base_path)
-    if not base_path.exists():
-        base_path.mkdir()
-    create_structure(base_path, directory_structure)
+@click.command()
+@click.argument('base_path', type=click.Path(exists=True, dir_okay=True))
+@click.argument('project_name')
+def setup_test_environment(base_path, project_name):
+    project_path = Path(base_path + project_name)
+    if not project_path.exists():
+        project_path.mkdir()
+    create_structure(project_path, directory_structure)
 
 if __name__ == "__main__":
-    test_base_path = Path("/home/sez26/TIGP-IIP/Automation_Prep/Python/test_project")
-    setup_test_environment(test_base_path)
+    setup_test_environment()
