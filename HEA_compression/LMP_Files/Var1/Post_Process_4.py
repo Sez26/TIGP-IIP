@@ -64,6 +64,9 @@ for i in range(0, numfile):
 print('m: ',m)
 print('c: ',c)
 
+# Using custom style
+plt.style.use("/home/sez26/TIGP-IIP/Learning/my_style.mplstyle")
+
 # Create a figure with a numfilex1 grid of subplots
 fig, axs = plt.subplots(numfile, 1, figsize=(10, 8), gridspec_kw={'wspace': 0.5, 'hspace': 0.5})
 
@@ -96,9 +99,9 @@ lit_val_HEA_Eu = np.array([1, 3, 2])
 for i in range(0, numfile):
     axs[i].plot(Res_Read[i, :, 0], Res_Read[i, :, 1])
     # plot literature values
-    axs[i].plot(Res_Read[i, :, 0], Res_Read[i, :, 0]*lit_val_HEA_E[i],'r')
+    axs[i].plot(Res_Read[i, :, 0], Res_Read[i, :, 0]*lit_val_HEA_E[i])
     # add shaded uncertainty region
-    axs[i].fill_between(Res_Read[i, :, 0], Res_Read[i, :, 0]*(lit_val_HEA_E[i] - lit_val_HEA_Eu[i]), Res_Read[i, :, 0]*(lit_val_HEA_E[i] + lit_val_HEA_Eu[i]), color = 'r', alpha=0.2)
+    axs[i].fill_between(Res_Read[i, :, 0], Res_Read[i, :, 0]*(lit_val_HEA_E[i] - lit_val_HEA_Eu[i]), Res_Read[i, :, 0]*(lit_val_HEA_E[i] + lit_val_HEA_Eu[i]), alpha=0.2)
     # figure titles and axes labels
     axs[i].set_title(Figure_Titles[i])
     axs[i].set_xlabel('Strain')
