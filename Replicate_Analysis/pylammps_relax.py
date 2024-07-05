@@ -86,7 +86,7 @@ with open(output_file, 'w') as f:
         L.command("variable newly equal f_avg[2]")
         L.command("variable newlz equal f_avg[3]")
         L.command("change_box all x final 0 ${newlx} y final 0 ${newly} z final 0 ${newlz} remap units box")
-        L.unfix(avg)
+        L.command("unfix avg")
 
         # adding a minimisation
         L.command("dump 1 all custom 100 min_dump.cfg id type x y z v_sa_hydro v_sa_von")
