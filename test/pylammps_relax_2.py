@@ -1,6 +1,6 @@
 from lammps import PyLammps
 import os
-from mpi4py import MPI
+# from mpi4py import MPI
 import sys
 from contextlib2 import redirect_stdout, redirect_stderr
 
@@ -33,8 +33,10 @@ with open(output_file, 'w') as f:
         L.pair_coeff("* *", "HEA_var1.snapcoeff HEA_var1.snapparam", "Ni Co Ti Zr Hf")
 
         # Setup standard output
-        L.command("thermo_style	custom step temp pe pxx pyy pzz density")
-        L.command("thermo 100")
+        # L.command("thermo 100")
+        # L.command("thermo_style	custom step temp pe pxx pyy pzz density")
+        L.thermo(100)
+        L.thermo_style("custom step temp pe vol density pxx pyy pzz")
 
         # Set up and run minimization
         L.command("dump 1 all custom 100 min_dump.cfg id type x y z")
@@ -64,19 +66,28 @@ with open(output_file, 'w') as f:
         L.command("variable	sa_von atom sqrt(0.5*((v_sa_xx-v_sa_yy)^2+(v_sa_yy-v_sa_zz)^2+(v_sa_zz-v_sa_xx)^2)+3.0*((v_sa_xy)^2+(v_sa_xz)^2+(v_sa_yz)^2))")
 
         # Set up and run MD in NPT ensemble
-        L.command("timestep	0.001")
+        L.timestep(0.001)
         L.command("neighbor	1.0 bin")
         L.command("neigh_modify	every 5 delay 0 check yes")
-        L.command("reset_timestep	0")
+        L.reset_timestep(0)
         L.velocity("all create 300.0 12345678")
-        L.command("dump	1 all custom 1000 md_npt_dump.cfg id type x y z v_sa_hydro v_sa_von")
-        L.command("fix 2 all print 100 ${step} ${temp} ${pe} ${vol} ${density} ${pxx} ${pyy} ${pzz} file Record_npt.txt")
-        L.command("fix 	1 all npt temp 300 300 0.1 aniso 0 0 1.0")
-        L.command("fix 	avg all ave/time 10 500 50000 v_lenx v_leny v_lenz")
         
-        # RUN
-        L.run(50000)
+        # Define dump command
+        L.dump(1, "all", "custom", 1000, "md_npt_dump.cfg", "id type x y z v_sa_hydro v_sa_von")
 
+        # Set up fix print before other fixes
+        L.fix(2, "all", "print", 100, "$(step) $(temp) $(pe) $(vol) $(density) $(pxx) $(pyy) $(pzz)", "file", "Record_npt.txt")
+
+        # Define NPT ensemble
+        L.fix(1, "all", "npt", "temp", 300, 300, 0.1, "aniso", 0, 0, 1.0)
+
+        # Ensure fix ave/time has a compatible output frequency
+        L.fix("avg", "all", "ave/time", 10, 1000, 100000, "v_lenx v_leny v_lenz")
+
+        # RUN
+        L.run(100000)
+
+        # Cleanup
         L.undump(1)
         L.unfix(1)
         L.unfix(2)
@@ -86,7 +97,7 @@ with open(output_file, 'w') as f:
         L.command("variable newly equal f_avg[2]")
         L.command("variable newlz equal f_avg[3]")
         L.command("change_box all x final 0 ${newlx} y final 0 ${newly} z final 0 ${newlz} remap units box")
-        L.command("unfix avg")
+        L.unfix("avg")
         # This writes post relaxation to file for Thermal expansion analysis
         L.command("write_data after_relax.data nocoeff")
 
@@ -95,4 +106,4 @@ with open(output_file, 'w') as f:
         L.command("minimize 0.0 0.02 5000 10000")
         # this writes to .cfg file of perfect mesh relaxation to be read and used to calculate new lattice parameter for dislocation
         # and stress strain analysis
-        L.command("undump 1")
+        L.undump(1)
