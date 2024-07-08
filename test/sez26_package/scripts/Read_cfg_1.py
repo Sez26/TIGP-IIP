@@ -72,8 +72,7 @@ def read_config(path, file_name, duplication):
     # print(avg_latt_parameter) # GAHHH you have to be so careful about printing stuff in click
 
     # divide by number of duplications
-    duplications = 18
-    div_avg = avg_latt_parameter/duplications
+    div_avg = avg_latt_parameter/duplication
 
     # click.echo(f"The new lattice parameter after minimisation is {div_avg}")
     return div_avg

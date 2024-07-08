@@ -11,6 +11,7 @@ import click
 @click.argument('max_iter', type=click.INT)
 @click.argument('max_eval', type=click.INT)
 def RelaxAnalysis(relax_file_path, coeff_name, param_name, temp, run_steps, etol, ftol, max_iter, max_eval):
+    click.echo("Generating LAMMPS code input file")
     in_file_path = relax_file_path + "/input/in.relax.HEA"
     lmp_file_path = relax_file_path + "/input/HEA_II.lmp"
 # Redirect commands to a file
@@ -92,6 +93,7 @@ def RelaxAnalysis(relax_file_path, coeff_name, param_name, temp, run_steps, etol
         f.write(f"dump           1 all custom 100 {relax_file_path}output/min_dump.cfg id type x y z v_sa_hydro v_sa_von\n") # parameterise for file system
         f.write(f"minimize	    {etol} {ftol} {max_iter} {max_eval}\n") # parameterise
         f.write("undump         1")
+        click.echo("LAMMPS input file generated")
 
 
 
