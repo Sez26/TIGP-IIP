@@ -50,7 +50,7 @@ def create_structure(base_path, structure):
 @click.argument('base_path', type=click.Path(exists=True, dir_okay=True))
 @click.argument('project_name')
 def setup_test_environment(base_path, project_name):
-    project_path = Path(base_path + project_name)
+    project_path = Path(base_path + "/" + project_name)
     if not project_path.exists():
         project_path.mkdir()
     create_structure(project_path, directory_structure)

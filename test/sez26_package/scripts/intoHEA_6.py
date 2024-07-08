@@ -38,19 +38,19 @@ def ChangeElement(atoms, idx, desChemSym):
 
 # introducing command
 @click.command()
-@click.argument('wdir', type=click.Path(exists=True, dir_okay=True))
+@click.argument('in_dir', type=click.Path(exists=True, dir_okay=True))
 @click.argument('save_dir', type=click.Path(exists=True, dir_okay=True))
 # argument names not case sensistive!
-def intoHEA_6(wdir, save_dir):
+def intoHEA_6(in_dir, save_dir):
     # intoducing help text
     """ intoHEA_6.py is a function which converts a b2 Ni, Ti crystal lattice into a ordered HEA.
-    It requires an input of the path (WDIR) to the directory where a POSCAR file has been saved.
+    It requires an input of the path (in_dir) to the directory where a POSCAR file has been saved.
     The output ordered HEA_II.lmp file will be saved into the same directory as the input POSCAR.
     Created by SF 2024 as part of TIGP-IIP project.
     """
     # importing poscar
     # specifying path to file
-    PoscarFile = wdir + 'POSCAR'
+    PoscarFile = in_dir + 'POSCAR'
     b2NiTi = vasp.read_vasp(PoscarFile) # vasp.read_vasp function reads POSCAR files as Atoms type
     click.echo('POSCAR file loaded.')
     # 1) Split coordinates into sublattice A and B

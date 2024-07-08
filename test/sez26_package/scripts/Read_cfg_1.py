@@ -63,7 +63,7 @@ class LAMMPS_OP_CFGParser:
 @click.argument('file_name')
 @click.argument('duplication', type=click.FLOAT)
 def read_config(path, file_name, duplication):
-    file_path = Path(path + file_name)
+    file_path = Path(path + "/" + file_name)
     parser = LAMMPS_OP_CFGParser(file_path)
     parsed_data = parser.parse()
     BB = parsed_data["BOX BOUNDS pp pp pp"]
