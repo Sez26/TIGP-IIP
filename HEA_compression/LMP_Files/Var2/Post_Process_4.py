@@ -1,6 +1,6 @@
 ### script to post process data
-# plot strain against temperature
-# calculate thermal expansion coeffecient
+# plot stress against strain
+# calculate young's modulus
 
 import numpy as np
 import matplotlib.pyplot as plt
