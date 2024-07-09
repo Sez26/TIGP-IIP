@@ -18,6 +18,7 @@ directory_structure = {
         },
         "config": [],
         "logs": [],
+        "figures": [],
         # "environment": ["requirements.txt", "environment.yml"],
         # "README.md": None
     }
