@@ -6,14 +6,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import statistics
 
-DirPath = './LargeHEA/'
+DirPath = './HEA/Density_Results/'
 
 def LoadLAMMPSResTxt(filename, dim):
     # load data
     with open(filename, 'r') as lmps_file:
         lmps_data = lmps_file.readlines()
 
-    # print(lmps_data)
+    # print(len(lmps_data))
 
     # setting dimensions
     [rows, columns] = dim
@@ -42,9 +42,8 @@ def LoadLAMMPSResTxt(filename, dim):
     return lmps_table
 
 # Loading all results
-FilePathArr = ['Var1_HEA_II_NPT.txt', 'Var2_HEA_II_NPT.txt']
-Figure_Titles = ['SS_curve_100']
-numfile = 2
+FilePathArr = ['HEA_I_npt.txt', 'HEA_II_npt.txt', 'HEA_III_npt.txt']
+numfile = 3
 res_rows = 1002
 res_columns = 8
 
@@ -63,7 +62,7 @@ for i in range(0, numfile):
 plt.style.use("/home/sez26/TIGP-IIP/Learning/my_style.mplstyle")
 
 # Create a figure with a numfilex1 grid of subplots
-fig, axs = plt.subplots(numfile, 1, figsize=(10, 8), gridspec_kw={'wspace': 0.5, 'hspace': 0.5})
+# fig, axs = plt.subplots(1, 1, figsize=(10, 8), gridspec_kw={'wspace': 0.5, 'hspace': 0.5})
 
 # looping the plotting
 text_x = 0.015
@@ -92,19 +91,19 @@ text_y = 0.2
 
 # for temperature only
 # temperature
-axs[0].plot(Res_Read[0, :, 0], Res_Read[0, :, 1], 'o-')
-axs[0].plot( Res_Read[1, :, 0], Res_Read[1, :, 1], 'o-')
-axs[0].set_xlabel('Simulation step')
-axs[0].set_ylabel('Temperature')
-axs[0].legend(['Var1', 'Var2'])
+# for i in range(0,numfile):
+#     axs[0].plot(Res_Read[i, :, 0], Res_Read[i, :, 1], 'o-')
+# axs[0].set_xlabel('Simulation step')
+# axs[0].set_ylabel('Temperature')
+# axs[0].legend(['HEA_II', 'HEA_II', 'HEA_III'])
 
 # for temperature only
 # temperature
-axs[1].plot(Res_Read[0, :, 0], Res_Read[0, :, 4], 'o-')
-axs[1].plot( Res_Read[1, :, 0], Res_Read[1, :, 4], 'o-')
-axs[1].set_xlabel('Simulation step')
-axs[1].set_ylabel('Density')
-axs[1].legend([f"Var 1, density={Density[0]}", f"Var 2, density={Density[1]}"])
+for i in range(0,numfile):
+    plt.plot(Res_Read[i, :, 0], Res_Read[i, :, 4], 'o-')
+plt.xlabel('Simulation step')
+plt.ylabel('Density')
+plt.legend([f"HEA_I, density={Density[0]}", f"HEA_II, density={Density[1]}", f"HEA_III, density={Density[2]}"], loc = 'upper right')
 # # adding Young's Mod annotation
 # label_text = f"""
 # E_x={m[i,0,0]:.3e}
@@ -113,7 +112,7 @@ axs[1].legend([f"Var 1, density={Density[0]}", f"Var 2, density={Density[1]}"])
 
 # save figure
 
-plt.savefig(DirPath + 'results_npt.png', format = 'png')
+plt.savefig(DirPath + 'results_npt_denonly.png', format = 'png')
 
 plt.show()
 

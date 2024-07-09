@@ -26,9 +26,12 @@ HEA_I_therm_exp = LoadLAMMPSResTxt('./HEA/Therm_Exp_Res/HEA_I_Res.txt')
 HEA_II_therm_exp = LoadLAMMPSResTxt('./HEA/Therm_Exp_Res/HEA_II_Res.txt')
 HEA_III_therm_exp = LoadLAMMPSResTxt('./HEA/Therm_Exp_Res/HEA_III_Res.txt')
 
-plt.plot(HEA_I_therm_exp[:,0], HEA_I_therm_exp[:,1], 'k')
-plt.plot(HEA_II_therm_exp[:,0], HEA_II_therm_exp[:,1], 'r')
-plt.plot(HEA_III_therm_exp[:,0], HEA_III_therm_exp[:,1], 'b')
+# Using custom style
+plt.style.use("/home/sez26/TIGP-IIP/Learning/my_style.mplstyle")
+
+plt.plot(HEA_I_therm_exp[:,0], HEA_I_therm_exp[:,1])
+plt.plot(HEA_II_therm_exp[:,0], HEA_II_therm_exp[:,1])
+plt.plot(HEA_III_therm_exp[:,0], HEA_III_therm_exp[:,1])
 
 plt.title('Thermal expansion of HEA')
 plt.xlabel('Temperature (K)')

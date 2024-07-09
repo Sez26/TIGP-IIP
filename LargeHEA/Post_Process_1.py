@@ -25,8 +25,11 @@ def LoadLAMMPSResTxt(filename):
 Var1_HEA_II_therm_exp = LoadLAMMPSResTxt('./LargeHEA/Var1_HEA_II_Res.txt')
 Var2_HEA_II_therm_exp = LoadLAMMPSResTxt('./LargeHEA/Var2_HEA_II_Res.txt')
 
-plt.plot(Var1_HEA_II_therm_exp[:,0], Var1_HEA_II_therm_exp[:,1], 'k')
-plt.plot(Var2_HEA_II_therm_exp[:,0], Var2_HEA_II_therm_exp[:,1], 'r')
+# Using custom style
+plt.style.use("/home/sez26/TIGP-IIP/Learning/my_style.mplstyle")
+
+plt.plot(Var1_HEA_II_therm_exp[:,0], Var1_HEA_II_therm_exp[:,1])
+plt.plot(Var2_HEA_II_therm_exp[:,0], Var2_HEA_II_therm_exp[:,1])
 
 plt.title('Thermal expansion of HEA')
 plt.xlabel('Temperature (K)')
