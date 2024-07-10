@@ -30,7 +30,7 @@ variable       avg_T equal f_avg[1]
 variable       L equal f_avg[2]
 variable       L0 equal ${L}
 print          "Temp Strain" file /home/winniebird/sfarrelly2024/test/test_projects/test_project_1/project/data/output/Record_thermal_exp.txt
-print          "${avg_T}    0.0" append Record_thermal_exp.txt
+print          "${avg_T}    0.0" append /home/winniebird/sfarrelly2024/test/test_projects/test_project_1/project/data/output/Record_thermal_exp.txt
 unfix          avg
 variable	    n loop 3
 label          heat
@@ -40,7 +40,7 @@ fix		    avg all ave/time 10 100 1000 c_thermo_temp v_avg_lxyz
 run		    1000
 unfix		    1
 variable       avg_T equal f_avg[1]
-variable       L equal f_avg[2]/${L0}-1.0
+variable       strain equal f_avg[2]/${L0}-1.0
 print          "${avg_T}    ${strain}" append /home/winniebird/sfarrelly2024/test/test_projects/test_project_1/project/data/output/Record_thermal_exp.txt
 unfix          avg
 next           n

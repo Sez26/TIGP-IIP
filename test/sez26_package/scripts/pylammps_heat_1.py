@@ -53,7 +53,7 @@ def HeatAnalysis(heat_file_path, coeff_name, param_name, temp, run_steps, heat_l
         f.write("variable       L equal f_avg[2]\n")
         f.write("variable       L0 equal ${L}\n")
         f.write(f"print          \"Temp Strain\" file {heat_file_path}/output/Record_thermal_exp.txt\n")
-        f.write("print          \"${avg_T}    0.0\" append Record_thermal_exp.txt\n")
+        f.write(f"print          \"${{avg_T}}    0.0\" append {heat_file_path}/output/Record_thermal_exp.txt\n")
         f.write("unfix          avg\n")
 
         f.write(f"variable	    n loop {heat_loop}\n")
@@ -64,7 +64,7 @@ def HeatAnalysis(heat_file_path, coeff_name, param_name, temp, run_steps, heat_l
         f.write(f"run		    {run_steps}\n") # parameterise
         f.write("unfix		    1\n")
         f.write("variable       avg_T equal f_avg[1]\n")
-        f.write("variable       L equal f_avg[2]/${L0}-1.0\n")
+        f.write("variable       strain equal f_avg[2]/${L0}-1.0\n")
         f.write(f"print          \"${{avg_T}}    ${{strain}}\" append {heat_file_path}/output/Record_thermal_exp.txt\n")
         f.write("unfix          avg\n")
 

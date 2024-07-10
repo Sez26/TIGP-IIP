@@ -4,7 +4,7 @@ atom_style     atomic
 units          metal
 read_data     /home/winniebird/sfarrelly2024/test/test_projects/test_project_1/project/data/output/after_relax.data
 Reading data file ...
-  orthogonal box = (0 0 0) to (12.444875 12.497755 12.459783)
+  orthogonal box = (0 0 0) to (12.511648 12.40538 12.493651)
   1 by 1 by 1 MPI processor grid
   reading atoms ...
   128 atoms
@@ -60,33 +60,33 @@ Neighbor list info ...
       pair build: full/bin/atomonly
       stencil: full/bin/3d
       bin: standard
-Per MPI rank memory allocation (min/avg/max) = 3.599 | 3.599 | 3.599 Mbytes
+Per MPI rank memory allocation (min/avg/max) = 3.59 | 3.59 | 3.59 Mbytes
    Step          Temp          PotEng          Pxx            Pyy            Pzz          Density    
-         0   286.03363     -1001.7327      512.47036      664.71549     -1652.0044      8.9809625    
-       100   279.23802     -1001.3438      2745.1264      1763.5779      1148.1879      8.9815259    
-       200   304.31097     -1000.906       484.5661       1440.2124      913.83766      8.967144     
-       300   315.0996      -1001.0716     -3642.8764     -2536.594       527.10571      8.962063     
-       400   331.21933     -1001.6529      1098.321      -1742.6311     -1813.7852      8.9673359    
-       500   281.80057     -1001.2047      611.31704      396.19225     -3813.8186      8.9672206    
-       600   316.84242     -1001.4878      3243.8272      195.08218      2321.2057      8.9985218    
-       700   334.40798     -1000.7527     -9377.9902     -6242.5046      3535.3827      8.9401877    
-       800   339.37342     -1000.7277      4143.7223      6828.8508     -555.0331       8.9607527    
-       900   301.34642     -1000.884       7261.3995      6531.2003      2475.5422      8.9944946    
-      1000   289.35633     -1001.226      -9132.4681     -12456.146     -9231.6233      8.9137317    
-Loop time of 21.0151 on 1 procs for 1000 steps with 128 atoms
+         0   290.84732     -1001.4632      1657.1425      6818.2214      1101.1342      8.9751549    
+       100   289.47999     -1001.1738      3718.7961     -5794.3729      1238.3831      8.9620843    
+       200   310.65478     -1000.7946      139.03022      4158.501       1474.2218      8.9848756    
+       300   309.36356     -1000.6313     -4017.8195     -3102.5438     -2760.2499      8.929957     
+       400   308.11178     -1001.7628      3255.4545     -95.705832      526.6582       8.9805379    
+       500   276.17858     -1001.5898     -1091.0205     -5820.3971     -3896.0795      8.9389065    
+       600   266.07295     -1001.0369     -1247.8683      5253.3462      5661.9428      8.9847058    
+       700   300.60853     -1000.9268      8193.0714      16274.278      3016.1998      9.0059527    
+       800   301.39743     -1000.7803     -1841.3091     -7354.3999     -8203.8704      8.9244036    
+       900   328.36615     -1001.118      -2269.1346     -10449.038      5426.5548      8.9548385    
+      1000   289.82439     -1001.3697     -659.80163      4502.7402      4443.7017      8.9813478    
+Loop time of 21.0168 on 1 procs for 1000 steps with 128 atoms
 
-Performance: 4.111 ns/day, 5.838 hours/ns, 47.585 timesteps/s, 6.091 katom-step/s
+Performance: 4.111 ns/day, 5.838 hours/ns, 47.581 timesteps/s, 6.090 katom-step/s
 100.0% CPU use with 1 MPI tasks x no OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 21.004     | 21.004     | 21.004     |   0.0 | 99.95
-Neigh   | 0.0027502  | 0.0027502  | 0.0027502  |   0.0 |  0.01
-Comm    | 0.0020672  | 0.0020672  | 0.0020672  |   0.0 |  0.01
-Output  | 0.00028848 | 0.00028848 | 0.00028848 |   0.0 |  0.00
-Modify  | 0.0052887  | 0.0052887  | 0.0052887  |   0.0 |  0.03
-Other   |            | 0.0006021  |            |       |  0.00
+Pair    | 21.006     | 21.006     | 21.006     |   0.0 | 99.95
+Neigh   | 0.0028702  | 0.0028702  | 0.0028702  |   0.0 |  0.01
+Comm    | 0.0020614  | 0.0020614  | 0.0020614  |   0.0 |  0.01
+Output  | 0.00030111 | 0.00030111 | 0.00030111 |   0.0 |  0.00
+Modify  | 0.0051641  | 0.0051641  | 0.0051641  |   0.0 |  0.02
+Other   |            | 0.0005942  |            |       |  0.00
 
 Nlocal:            128 ave         128 max         128 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
@@ -94,22 +94,22 @@ Nghost:            727 ave         727 max         727 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 Neighs:              0 ave           0 max           0 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-FullNghs:         4194 ave        4194 max        4194 min
+FullNghs:         4266 ave        4266 max        4266 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 
-Total # of neighbors = 4194
-Ave neighs/atom = 32.765625
-Neighbor list builds = 13
+Total # of neighbors = 4266
+Ave neighs/atom = 33.328125
+Neighbor list builds = 14
 Dangerous builds = 0
 unfix		    1
 variable       avg_T equal f_avg[1]
 variable       L equal f_avg[2]
 variable       L0 equal ${L}
-variable       L0 equal 12.4737022020026
+variable       L0 equal 12.4759131095693
 print          "Temp Strain" file /home/winniebird/sfarrelly2024/test/test_projects/test_project_1/project/data/output/Record_thermal_exp.txt
 Temp Strain
-print          "${avg_T}    0.0" append Record_thermal_exp.txt
-307.81134660704    0.0
+print          "${avg_T}    0.0" append /home/winniebird/sfarrelly2024/test/test_projects/test_project_1/project/data/output/Record_thermal_exp.txt
+300.354602197861    0.0
 unfix          avg
 variable	    n loop 3
 label          heat
@@ -120,33 +120,33 @@ fix            1 all npt temp 350 ${t} 0.1 aniso 0 0 1.0
 fix            1 all npt temp 350 350 0.1 aniso 0 0 1.0
 fix		    avg all ave/time 10 100 1000 c_thermo_temp v_avg_lxyz
 run		    1000
-Per MPI rank memory allocation (min/avg/max) = 4.863 | 4.863 | 4.863 Mbytes
+Per MPI rank memory allocation (min/avg/max) = 4.854 | 4.854 | 4.854 Mbytes
    Step          Temp          PotEng          Pxx            Pyy            Pzz          Density    
-      1000   289.35633     -1001.226      -9132.4681     -12456.146     -9231.6233      8.9137317    
-      1100   310.61534     -1000.7747      8794.3023      9129.0857      7178.7308      9.0118135    
-      1200   309.28608     -1000.2098     -2197.0269      2109.9764     -6607.2551      8.9418782    
-      1300   383.15995     -1000.7634     -4024.0845     -8113.2524      2590.9791      8.9388224    
-      1400   367.80519     -1000.2082      4033.9216      2970.0832      1807.4639      8.9867786    
-      1500   347.9923      -999.80648     -11829.897     -8831.1342     -10267.077      8.881517     
-      1600   374.29807     -1000.3624      14247.179      18837.388      14283.443      9.0372711    
-      1700   319.78787     -1000.3249     -13555.242     -12436.63      -10899.094      8.8853038    
-      1800   341.86699     -1001.0201      5778.3719      2220.23        330.15895      9.0010232    
-      1900   348.44982     -1000.6007      3580.628      -1512.1242      5281.6333      8.9718291    
-      2000   393.62918     -1000.4056     -12555.558     -9697.7768     -10223.341      8.8903426    
-Loop time of 21.0181 on 1 procs for 1000 steps with 128 atoms
+      1000   289.82439     -1001.3697     -659.80163      4502.7402      4443.7017      8.9813478    
+      1100   308.12039     -1000.985      -3144.3234     -771.29662     -1027.8676      8.9506665    
+      1200   327.10592     -1000.492       6162.5365     -222.64271     -1887.8042      8.969585     
+      1300   358.24748     -1000.51       -2019.041       298.0142       479.74876      8.9559556    
+      1400   348.49329     -999.97554     -4592.3665      937.55745     -5033.5021      8.9297952    
+      1500   348.80652     -999.7867       2070.1073      7685.673       6988.9689      8.9897904    
+      1600   396.24326     -1000.5326     -4767.7858     -13980.962     -7844.0535      8.9060152    
+      1700   315.42169     -1000.2298      4982.1503      3574.9182      1800.4417      8.9769017    
+      1800   352.05175     -1001.0058      1263.914       8133.2298      75.025975      8.9906153    
+      1900   337.25969     -1000.4545     -14262.214     -11284.415     -6743.2891      8.897988     
+      2000   382.10135     -1000.2997      10976.712      12974.536      15924.983      9.0251102    
+Loop time of 21.0305 on 1 procs for 1000 steps with 128 atoms
 
-Performance: 4.111 ns/day, 5.838 hours/ns, 47.578 timesteps/s, 6.090 katom-step/s
+Performance: 4.108 ns/day, 5.842 hours/ns, 47.550 timesteps/s, 6.086 katom-step/s
 100.0% CPU use with 1 MPI tasks x no OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 21.007     | 21.007     | 21.007     |   0.0 | 99.95
-Neigh   | 0.0026957  | 0.0026957  | 0.0026957  |   0.0 |  0.01
-Comm    | 0.0020667  | 0.0020667  | 0.0020667  |   0.0 |  0.01
-Output  | 0.00026983 | 0.00026983 | 0.00026983 |   0.0 |  0.00
-Modify  | 0.0053164  | 0.0053164  | 0.0053164  |   0.0 |  0.03
-Other   |            | 0.0006021  |            |       |  0.00
+Pair    | 21.019     | 21.019     | 21.019     |   0.0 | 99.95
+Neigh   | 0.0031332  | 0.0031332  | 0.0031332  |   0.0 |  0.01
+Comm    | 0.0020563  | 0.0020563  | 0.0020563  |   0.0 |  0.01
+Output  | 0.00028431 | 0.00028431 | 0.00028431 |   0.0 |  0.00
+Modify  | 0.0051506  | 0.0051506  | 0.0051506  |   0.0 |  0.02
+Other   |            | 0.0005893  |            |       |  0.00
 
 Nlocal:            128 ave         128 max         128 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
@@ -154,17 +154,134 @@ Nghost:            727 ave         727 max         727 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 Neighs:              0 ave           0 max           0 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-FullNghs:         4332 ave        4332 max        4332 min
+FullNghs:         4336 ave        4336 max        4336 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 
-Total # of neighbors = 4332
-Ave neighs/atom = 33.84375
-Neighbor list builds = 13
+Total # of neighbors = 4336
+Ave neighs/atom = 33.875
+Neighbor list builds = 15
 Dangerous builds = 0
 unfix		    1
 variable       avg_T equal f_avg[1]
-variable       L equal f_avg[2]/${L0}-1.0
-variable       L equal f_avg[2]/12.4737022020026-1.0
+variable       strain equal f_avg[2]/${L0}-1.0
+variable       strain equal f_avg[2]/12.4759131095693-1.0
 print          "${avg_T}    ${strain}" append /home/winniebird/sfarrelly2024/test/test_projects/test_project_1/project/data/output/Record_thermal_exp.txt
-ERROR on proc 0: Substitution for illegal variable strain (../input.cpp:651)
-Last command: ${avg_T
+343.531791987758    0.000208938216871291
+unfix          avg
+next           n
+jump          /home/winniebird/sfarrelly2024/test/test_projects/test_project_1/project/data/input/in.heat.HEA heat
+variable       t equal 300.0+${n}*50
+variable       t equal 300.0+2*50
+fix            1 all npt temp ${t} ${t} 0.1 aniso 0 0 1.0
+fix            1 all npt temp 400 ${t} 0.1 aniso 0 0 1.0
+fix            1 all npt temp 400 400 0.1 aniso 0 0 1.0
+fix		    avg all ave/time 10 100 1000 c_thermo_temp v_avg_lxyz
+run		    1000
+Per MPI rank memory allocation (min/avg/max) = 4.854 | 4.854 | 4.854 Mbytes
+   Step          Temp          PotEng          Pxx            Pyy            Pzz          Density    
+      2000   382.10135     -1000.2997      10976.712      12974.536      15924.983      9.0251102    
+      2100   377.27186     -999.54909     -15459.279     -11391.379     -13889.981      8.8600081    
+      2200   444.43732     -999.99072      8808.4361      6082.5999      4158.4628      8.9726594    
+      2300   415.14553     -999.69544     -4769.1651     -9654.4637     -3147.1248      8.9102875    
+      2400   352.26588     -998.97689      1995.5451      813.98673     -3592.9922      8.9355106    
+      2500   441.94455     -999.98399      4268.7813      14783.656      8762.1921      8.9966991    
+      2600   410.11268     -998.42449     -18182.927     -21525.23      -10601.059      8.8336976    
+      2700   398.34339     -998.4799       20187.907      18848.867      19389.908      9.0401302    
+      2800   370.37276     -999.00021     -11422.091     -12044.77      -15212.707      8.8530614    
+      2900   398.36605     -999.37768      13349.413      11688.982      7050.1505      9.0096779    
+      3000   381.55636     -999.2263      -3779.7738     -1695.0533     -5446.9702      8.9182647    
+Loop time of 20.9844 on 1 procs for 1000 steps with 128 atoms
+
+Performance: 4.117 ns/day, 5.829 hours/ns, 47.654 timesteps/s, 6.100 katom-step/s
+100.0% CPU use with 1 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 20.973     | 20.973     | 20.973     |   0.0 | 99.95
+Neigh   | 0.0033823  | 0.0033823  | 0.0033823  |   0.0 |  0.02
+Comm    | 0.0020791  | 0.0020791  | 0.0020791  |   0.0 |  0.01
+Output  | 0.00028705 | 0.00028705 | 0.00028705 |   0.0 |  0.00
+Modify  | 0.0051621  | 0.0051621  | 0.0051621  |   0.0 |  0.02
+Other   |            | 0.0005924  |            |       |  0.00
+
+Nlocal:            128 ave         128 max         128 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:            727 ave         727 max         727 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:         4198 ave        4198 max        4198 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 4198
+Ave neighs/atom = 32.796875
+Neighbor list builds = 16
+Dangerous builds = 0
+unfix		    1
+variable       avg_T equal f_avg[1]
+variable       strain equal f_avg[2]/${L0}-1.0
+variable       strain equal f_avg[2]/12.4759131095693-1.0
+print          "${avg_T}    ${strain}" append /home/winniebird/sfarrelly2024/test/test_projects/test_project_1/project/data/output/Record_thermal_exp.txt
+402.657449049963    0.00103007227859009
+unfix          avg
+next           n
+jump          /home/winniebird/sfarrelly2024/test/test_projects/test_project_1/project/data/input/in.heat.HEA heat
+variable       t equal 300.0+${n}*50
+variable       t equal 300.0+3*50
+fix            1 all npt temp ${t} ${t} 0.1 aniso 0 0 1.0
+fix            1 all npt temp 450 ${t} 0.1 aniso 0 0 1.0
+fix            1 all npt temp 450 450 0.1 aniso 0 0 1.0
+fix		    avg all ave/time 10 100 1000 c_thermo_temp v_avg_lxyz
+run		    1000
+Per MPI rank memory allocation (min/avg/max) = 4.854 | 4.854 | 4.854 Mbytes
+   Step          Temp          PotEng          Pxx            Pyy            Pzz          Density    
+      3000   381.55636     -999.2263      -3779.7738     -1695.0533     -5446.9702      8.9182647    
+      3100   398.58112     -998.87534      7233.595       7174.1747      10164.471      8.95993      
+      3200   441.89489     -998.6321      -1408.8756     -10512.771     -5320.9483      8.8873901    
+      3300   460.1014      -998.62959     -821.48644      4999.5087      5418.7171      8.9471243    
+      3400   440.46812     -998.39887     -2550.9065     -84.520959     -3327.4642      8.9241581    
+      3500   448.83755     -998.84453     -919.77531      2729.0294     -5896.7807      8.9257031    
+      3600   428.14445     -999.40234      2396.1432      4493.6238      5738.2046      8.9556402    
+      3700   383.58276     -999.14743     -7688.4513     -4975.9841     -1214.8657      8.9060499    
+      3800   480.77926     -999.60971      6145.3707      1006.4002      925.54432      8.9554301    
+      3900   431.15302     -998.20946     -12216.342     -7047.6521     -5510.2652      8.878132     
+      4000   506.95707     -998.99706      9519.291       6521.316       3251.6516      8.9643876    
+Loop time of 20.9559 on 1 procs for 1000 steps with 128 atoms
+
+Performance: 4.123 ns/day, 5.821 hours/ns, 47.719 timesteps/s, 6.108 katom-step/s
+100.0% CPU use with 1 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 20.945     | 20.945     | 20.945     |   0.0 | 99.95
+Neigh   | 0.0031648  | 0.0031648  | 0.0031648  |   0.0 |  0.02
+Comm    | 0.0020611  | 0.0020611  | 0.0020611  |   0.0 |  0.01
+Output  | 0.00027606 | 0.00027606 | 0.00027606 |   0.0 |  0.00
+Modify  | 0.005141   | 0.005141   | 0.005141   |   0.0 |  0.02
+Other   |            | 0.0005924  |            |       |  0.00
+
+Nlocal:            128 ave         128 max         128 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:            727 ave         727 max         727 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:         4234 ave        4234 max        4234 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 4234
+Ave neighs/atom = 33.078125
+Neighbor list builds = 15
+Dangerous builds = 0
+unfix		    1
+variable       avg_T equal f_avg[1]
+variable       strain equal f_avg[2]/${L0}-1.0
+variable       strain equal f_avg[2]/12.4759131095693-1.0
+print          "${avg_T}    ${strain}" append /home/winniebird/sfarrelly2024/test/test_projects/test_project_1/project/data/output/Record_thermal_exp.txt
+438.644627631188    0.00134342498635243
+unfix          avg
+next           n
+jump          /home/winniebird/sfarrelly2024/test/test_projects/test_project_1/project/data/input/in.heat.HEA heat
+Total wall time: 0:01:24
