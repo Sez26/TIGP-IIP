@@ -53,7 +53,7 @@ def create_structure(base_path, structure):
 def setup_test_environment(base_path, project_name):
     project_path = Path(base_path + "/" + project_name)
     if not project_path.exists():
-        project_path.mkdir()
+        os.makedirs(project_path)
     create_structure(project_path, directory_structure)
 
 if __name__ == "__main__":

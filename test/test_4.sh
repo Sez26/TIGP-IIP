@@ -55,7 +55,7 @@ project_path="$base_path/$project_name"
 cd $project_path
 
 # copy config into the project file
-scp $config_origin/config.cfg $project_path/project/config
+scp $config_origin/$CONFIG_FILE $project_path/project/config
 
 cd project/data/input
 
@@ -72,7 +72,7 @@ python pylammps_relax_5.py $project_path/project/data/ $wdir/HEA_var1.snapcoeff 
 
 # run LAMMPS relax (this needs to be changed when moved to slurm to allow for GPU processing)
 export LD_LIBRARY_PATH=/home/winniebird/anaconda3/lib:$LD_LIBRARY_PATH
-python run_lammps.py $project_path in.relax.HEA
+python run_lammps.py $project_path in.relax.HEA relax
 
 # read output
 latt_param_1=$(python Read_cfg_1.py $project_path/project/data/output 'min_dump.cfg'  $duplication)
@@ -84,8 +84,8 @@ python add_or_update_cfg.py --config-file=$project_path/project/config/config.cf
 # generate input file for heat analysis
 python pylammps_heat_1.py $project_path/project/data $wdir/HEA_var1.snapcoeff $wdir/HEA_var1.snapparam $temp $run_step $heat_loop $heat_int
 
-# run LAMMPS relax (this needs to be changed when moved to slurm to allow for GPU processing)
+# run LAMMPS heat (this needs to be changed when moved to slurm to allow for GPU processing)
 export LD_LIBRARY_PATH=/home/winniebird/anaconda3/lib:$LD_LIBRARY_PATH
-python run_lammps.py $project_path in.heat.HEA
+python run_lammps.py $project_path in.heat.HEA heat
 
 
