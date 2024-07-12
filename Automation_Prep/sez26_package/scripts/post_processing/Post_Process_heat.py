@@ -1,118 +1,71 @@
 ### script to post process data
-# plot density against time step
-# verify that density value settles
+# plot strain against temperature
+# calculate thermal expansion coeffecient
 
 import numpy as np
 import matplotlib.pyplot as plt
-import statistics
 
-DirPath = './HEA/Density_Results/'
-
-def LoadLAMMPSResTxt(filename, dim):
+def LoadLAMMPSResTxt(filename):
     # load data
     with open(filename, 'r') as lmps_file:
         lmps_data = lmps_file.readlines()
 
-    # print(len(lmps_data))
+    # print(lmps_data)
 
-    # setting dimensions
-    [rows, columns] = dim
-
-    # create new array for results
-    lmps_table = np.empty((rows-1, columns))
-    for i in range(1,rows):
-        before, sep, after = lmps_data[i].partition(' ')
+    # create new array
+    lmps_table = np.empty((len(lmps_data)-1, 2))
+    for i in range(1,len(lmps_data)):
+        before, sep, after = lmps_data[i].partition('\t')
         lmps_table[i-1, 0] = before
-        for j in range(1,columns-1):
-            before, sep, after = after.partition(' ')
-            lmps_table[i-1, j] = before
-        lmps_table[i-1, -1] = after
-
-    # print(lmps_table)
-    # # create new nested list for titles
-    # titles = [None] * columns
-    # before, sep, after = lmps_data[0].partition('  ')
-    # titles[0] = before
-    # for j in range(1,columns-1):
-    #     before, sep, after = after.partition('  ')
-    #     titles[j] = before
-    # before, sep, after = after.partition('  \n')
-    # titles[-1] = before
-    # print(titles)
+        before, sep, after = after.partition('\n')
+        lmps_table[i-1, 1] = before
     return lmps_table
 
 # Loading all results
-FilePathArr = ['HEA_I_npt.txt', 'HEA_II_npt.txt', 'HEA_III_npt.txt']
-numfile = 3
-res_rows = 1002
-res_columns = 8
-
-Res_Read = np.empty((numfile, res_rows-1, res_columns)) # minus one to remove title rows
-Res_Col_Titles = titles = [None] * numfile
-for i in range(0, numfile):
-    FilePath = DirPath + FilePathArr[i]
-    Res_Read[i, :, :] = LoadLAMMPSResTxt(FilePath, [res_rows, res_columns])
-
-# average last ~200 results to get settled density value
-Density = np.empty((numfile, 1))
-for i in range(0, numfile):
-    Density[i] = statistics.mean(Res_Read[i,800:,4])
+HEA_I_therm_exp = LoadLAMMPSResTxt('./HEA/Therm_Exp_Res/HEA_I_Res.txt')
+HEA_II_therm_exp = LoadLAMMPSResTxt('./HEA/Therm_Exp_Res/HEA_II_Res.txt')
+HEA_III_therm_exp = LoadLAMMPSResTxt('./HEA/Therm_Exp_Res/HEA_III_Res.txt')
 
 # Using custom style
 plt.style.use("/home/sez26/TIGP-IIP/Learning/my_style.mplstyle")
 
-# Create a figure with a numfilex1 grid of subplots
-# fig, axs = plt.subplots(1, 1, figsize=(10, 8), gridspec_kw={'wspace': 0.5, 'hspace': 0.5})
+plt.plot(HEA_I_therm_exp[:,0], HEA_I_therm_exp[:,1], linewidth = 3)
+plt.plot(HEA_II_therm_exp[:,0], HEA_II_therm_exp[:,1], linewidth = 3)
+plt.plot(HEA_III_therm_exp[:,0], HEA_III_therm_exp[:,1], linewidth = 3)
 
-# looping the plotting
-text_x = 0.015
-text_y = 0.2
+plt.title('Thermal expansion of HEA')
+plt.xlabel('Temperature (K)')
+plt.ylabel('Strain')
+plt.grid(True)
+legend_text = ['HEA I', 'HEA II', 'HEA III']
+plt.legend(legend_text)
+
+# Calculating thermal expansion coefficient
+coefficients_I = np.polyfit(HEA_I_therm_exp[:,0], HEA_I_therm_exp[:,1], 1)  # 1 means linear fit
+m_I, c_I = coefficients_I
+coefficients_II = np.polyfit(HEA_II_therm_exp[:,0], HEA_II_therm_exp[:,1], 1)  # 1 means linear fit
+m_II, c_II = coefficients_II
+coefficients_III = np.polyfit(HEA_III_therm_exp[:,0], HEA_III_therm_exp[:,1], 1)  # 1 means linear fit
+m_III, c_III = coefficients_III
+
+# Add text annotation
+text_x = 800
+text_y = 0
+text_y = 0
+# unicode stuff
+alpha = '\u03B1'
 # subscripts
-# for i in range(0, numfile):
-#     axs[i].plot(Res_Read[i, :, 0], Res_Read[i, :, 1:])
-#     axs[i].legend(Res_Col_Titles[i][1:])
-#     # figure titles and axes labels
-#     axs[i].set_title(Figure_Titles[i])
-#     axs[i].set_xlabel('Strain')
-#     axs[i].set_ylabel('Stress')
-#     # adding Young's Mod annotation
-#     label_text = f"""
-#     E_x={m[i,0,0]:.3e}
-#     E_y={m[i,0,1]:.3e}
-#     E_z={m[i,0,2]:.3e}
-#     """
-#     axs[i].text(text_x, text_y, label_text, fontsize=12)
-
-# # literature values
-# lit_val_HEA_E = np.array([96, 92, 92]) # GPa
-# # uncertainty values (+/- xGPa)
-# lit_val_HEA_Eu = np.array([1, 3, 2])
-
-
-# for temperature only
-# temperature
-# for i in range(0,numfile):
-#     axs[0].plot(Res_Read[i, :, 0], Res_Read[i, :, 1], 'o-')
-# axs[0].set_xlabel('Simulation step')
-# axs[0].set_ylabel('Temperature')
-# axs[0].legend(['HEA_II', 'HEA_II', 'HEA_III'])
-
-# for temperature only
-# temperature
-for i in range(0,numfile):
-    plt.plot(Res_Read[i, :, 0], Res_Read[i, :, 4], 'o-')
-plt.xlabel('Simulation step')
-plt.ylabel('Density')
-plt.legend([f"HEA_I, density={Density[0]}", f"HEA_II, density={Density[1]}", f"HEA_III, density={Density[2]}"], loc = 'upper right')
-# # adding Young's Mod annotation
-# label_text = f"""
-# E_x={m[i,0,0]:.3e}
-# """
-# axs[i].text(text_x, text_y, label_text, fontsize=12)
+sub_i = '\u1D62'
+label_text = f"""
+{alpha}{sub_i}={m_I:.3e}
+{alpha}{sub_i}{sub_i}={m_II:.3e}
+{alpha}{sub_i}{sub_i}{sub_i}={m_III:.3e}
+"""
+plt.text(text_x, text_y, label_text, fontsize=12)
 
 # save figure
 
-plt.savefig(DirPath + 'results_npt_denonly.png', format = 'png')
+plt.savefig('./HEA/Therm_Exp_Res/results_fig.png', format = 'png')
 
 plt.show()
 

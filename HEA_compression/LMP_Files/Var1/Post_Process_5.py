@@ -5,7 +5,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-DirPath = './HEA_compression/LMP_Files/Var1/'
+DirPath = '/home/sez26/TIGP-IIP/HEA_compression/LMP_Files/Var1/'
 
 def LoadLAMMPSResTxt(filename, dim):
     # load data
@@ -97,11 +97,11 @@ lit_val_HEA_Eu = np.array([1, 3, 2])
 
 # for stress x only
 for i in range(0, numfile):
-    axs[i].plot(Res_Read[i, :, 0], Res_Read[i, :, 1])
+    axs[i].plot(Res_Read[i, :, 0], Res_Read[i, :, 1], linewidth = 2)
     # plot literature values
     axs[i].plot(Res_Read[i, :, 0], Res_Read[i, :, 0]*lit_val_HEA_E[i])
     # add shaded uncertainty region
-    axs[i].fill_between(Res_Read[i, :, 0], Res_Read[i, :, 0]*(lit_val_HEA_E[i] - lit_val_HEA_Eu[i]), Res_Read[i, :, 0]*(lit_val_HEA_E[i] + lit_val_HEA_Eu[i]), alpha=0.2)
+    axs[i].fill_between(Res_Read[i, :, 0], Res_Read[i, :, 0]*(lit_val_HEA_E[i] - lit_val_HEA_Eu[i]), Res_Read[i, :, 0]*(lit_val_HEA_E[i] + lit_val_HEA_Eu[i]), alpha=0.5)
     # figure titles and axes labels
     axs[i].set_title(Figure_Titles[i])
     axs[i].set_xlabel('Strain')
