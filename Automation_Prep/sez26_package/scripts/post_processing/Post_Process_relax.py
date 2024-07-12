@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import statistics
 
-DirPath = './HEA/Density_Results/'
+DirPath = '/home/sez26/TIGP-IIP/Automation_Results/Small_3'
 
 def LoadLAMMPSResTxt(filename, dim):
     # load data
@@ -42,8 +42,8 @@ def LoadLAMMPSResTxt(filename, dim):
     return lmps_table
 
 # Loading all results
-FilePathArr = ['HEA_I_npt.txt', 'HEA_II_npt.txt', 'HEA_III_npt.txt']
-numfile = 3
+FilePathArr = ['/var1_npt.txt', '/var2_npt.txt', '/var3_npt.txt', '/var4_npt.txt', '/var5_npt.txt', '/var6_npt.txt', '/var7_npt.txt', '/var8_npt.txt', '/var9_npt.txt', '/var10_npt.txt']
+numfile = 10
 res_rows = 1002
 res_columns = 8
 
@@ -55,55 +55,21 @@ for i in range(0, numfile):
 
 # average last ~200 results to get settled density value
 Density = np.empty((numfile, 1))
+rho = '\u03C1'
+legend_text = []
 for i in range(0, numfile):
     Density[i] = statistics.mean(Res_Read[i,800:,4])
+    legend_text.append(f'Var{i+1}, {rho} = {Density[i, 0]:.3f}')
 
 # Using custom style
-plt.style.use("/home/sez26/TIGP-IIP/Learning/my_style.mplstyle")
-
-# Create a figure with a numfilex1 grid of subplots
-# fig, axs = plt.subplots(1, 1, figsize=(10, 8), gridspec_kw={'wspace': 0.5, 'hspace': 0.5})
-
-# looping the plotting
-text_x = 0.015
-text_y = 0.2
-# subscripts
-# for i in range(0, numfile):
-#     axs[i].plot(Res_Read[i, :, 0], Res_Read[i, :, 1:])
-#     axs[i].legend(Res_Col_Titles[i][1:])
-#     # figure titles and axes labels
-#     axs[i].set_title(Figure_Titles[i])
-#     axs[i].set_xlabel('Strain')
-#     axs[i].set_ylabel('Stress')
-#     # adding Young's Mod annotation
-#     label_text = f"""
-#     E_x={m[i,0,0]:.3e}
-#     E_y={m[i,0,1]:.3e}
-#     E_z={m[i,0,2]:.3e}
-#     """
-#     axs[i].text(text_x, text_y, label_text, fontsize=12)
-
-# # literature values
-# lit_val_HEA_E = np.array([96, 92, 92]) # GPa
-# # uncertainty values (+/- xGPa)
-# lit_val_HEA_Eu = np.array([1, 3, 2])
-
+plt.style.use("/home/sez26/TIGP-IIP/Automation_Prep/sez26_package/scripts/post_processing/my_style.mplstyle")
 
 # for temperature only
-# temperature
-# for i in range(0,numfile):
-#     axs[0].plot(Res_Read[i, :, 0], Res_Read[i, :, 1], 'o-')
-# axs[0].set_xlabel('Simulation step')
-# axs[0].set_ylabel('Temperature')
-# axs[0].legend(['HEA_II', 'HEA_II', 'HEA_III'])
-
-# for temperature only
-# temperature
 for i in range(0,numfile):
     plt.plot(Res_Read[i, :, 0], Res_Read[i, :, 4], 'o-')
 plt.xlabel('Simulation step')
 plt.ylabel('Density')
-plt.legend([f"HEA_I, density={Density[0]}", f"HEA_II, density={Density[1]}", f"HEA_III, density={Density[2]}"], loc = 'upper right')
+plt.legend(legend_text)
 # # adding Young's Mod annotation
 # label_text = f"""
 # E_x={m[i,0,0]:.3e}
@@ -112,7 +78,7 @@ plt.legend([f"HEA_I, density={Density[0]}", f"HEA_II, density={Density[1]}", f"H
 
 # save figure
 
-plt.savefig(DirPath + 'results_npt_denonly.png', format = 'png')
+plt.savefig(DirPath + '/results_npt_denonly.png', format = 'png')
 
 plt.show()
 

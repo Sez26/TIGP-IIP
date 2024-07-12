@@ -23,4 +23,4 @@ axes.labelsize: 12
 axes.labelweight: bold
 axes.spines.top: True
 axes.spines.right: True
-axes.prop_cycle: cycler('color', ['21D66D', '7B3DDC', 'FE7C21'])
+axes.prop_cycle: cycler('color', ['21D66D', '7B3DDC', 'FE7C21', '404040', '002060', '21D66Db3', '7B3DDCb3', 'FE7C21b3', '404040b3', '002060b3'])
